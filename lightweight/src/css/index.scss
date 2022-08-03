@@ -1,0 +1,191 @@
+@font-face {
+  font-family: 'Azo Sans';
+  src: url('../assets/fonts/azosans-thin-webfont.woff2') format('woff2'),
+    url('../assets/fonts/azosans-thin-webfont.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Azo Sans';
+  src: url('../assets/fonts/azosans-regular-webfont.woff2') format('woff2'),
+    url('../assets/fonts/azosans-regular-webfont.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: fallback;
+}
+
+@font-face {
+  font-family: 'Azo Sans';
+  src: url('../assets/fonts/azosans-bold-webfont.woff2') format('woff2'),
+    url('../assets/fonts/azosans-bold-webfont.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: fallback;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-body;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply mb-4 font-semibold text-gray-900;
+  }
+
+  h1 {
+    @apply text-xl;
+  }
+
+  h2 {
+    @apply text-lg;
+  }
+
+  h3 {
+    @apply text-base;
+  }
+
+  p {
+    @apply mt-2 mb-4 text-sm leading-normal text-gray-700;
+
+    a {
+      @apply underline;
+    }
+  }
+
+  #tableContents {
+    @apply flex-grow bg-white w-full;
+  }
+
+  .dataTable {
+    thead {
+      @apply bg-gray-50;
+
+      tr {
+        th {
+          &:first-child {
+            @apply py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6;
+          }
+
+          &:last-child {
+            @apply relative py-3.5 pl-3 pr-4 sm:pr-6;
+          }
+
+          @apply px-3 py-3.5 text-left text-sm font-semibold text-gray-900;
+        }
+      }
+    }
+
+    tr {
+      @apply py-4 pl-4 pr-3 text-sm whitespace-nowrap sm:pl-6;
+
+      td {
+        @apply px-3 py-4 text-sm text-gray-500 whitespace-nowrap;
+
+        &.dataTables-empty {
+          @apply bg-white;
+        }
+      }
+
+      &:nth-child(even) {
+        @apply bg-gray-50;
+      }
+    }
+
+    &-wrapper {
+      @apply h-full flex flex-col;
+    }
+
+    &-top {
+      @apply bg-white p-3 sm:flex items-center border-b border-gray-300 sticky top-0 z-10 space-y-3 md:space-y-0;
+    }
+
+    &-container {
+      @apply overflow-x-auto w-screen md:w-auto;
+    }
+
+    &-dropdown {
+      @apply mr-auto;
+
+      label {
+        @apply flex gap-3 items-center md:inline-flex; 
+
+        select {
+          @apply flex-1 leading-5 placeholder-gray-500 bg-white border border-gray-200 shadow-sm rounded-md focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-600 focus:border-blue-600 sm:text-sm;
+        }
+      }
+    }
+
+    &-search {
+      input {
+        @apply w-full md:w-auto px-3 py-2 leading-5 placeholder-gray-500 bg-white border border-gray-200 shadow-sm rounded-md focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-600 focus:border-blue-600 sm:text-sm;
+      }
+    }
+
+    &-bottom {
+      @apply bg-white min-h-[64px] px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6 sticky bottom-0 z-10 mt-auto;
+    }
+
+    &-info {
+      @apply text-sm text-gray-700;
+    }
+
+    &-pagination {
+      ul {
+        @apply relative z-0 inline-flex rounded-md shadow-sm -space-x-px;
+
+        li {
+          @apply relative inline-flex items-center border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50;
+
+          a {
+            @apply px-4 py-2;
+          }
+
+          &.pager {
+            a {
+              @apply px-2 py-2;
+            }
+          }
+
+          &.active {
+            @apply border border-primary bg-primary-light/25 text-secondary-darker;
+          }
+
+          &:first-child {
+            &.pager {
+              @apply rounded-l-md;
+            }
+          }
+
+          &:last-child {
+            &.pager {
+              @apply rounded-r-md;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@layer components {
+  .btn {
+    @apply flex justify-center w-auto px-3 py-2 text-sm font-medium transition-colors border border-transparent rounded-md shadow-sm focus:outline-none disabled:hover:cursor-not-allowed;
+
+    &--primary {
+      @apply text-secondary bg-primary hover:bg-primary-dark;
+    }
+
+    &--secondary {
+      @apply text-secondary bg-white border border-gray-300 hover:bg-gray-100 disabled:hover:bg-white;
+    }
+  }
+}
