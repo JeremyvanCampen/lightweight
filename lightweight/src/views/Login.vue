@@ -6,16 +6,16 @@
       <div
         class="flex justify-center"
       >
-        <img
-          class="w-auto h-12 lg:h-20"
-          src="../assets/images/Lightweight.png"
-          alt="Lightweight"
-        />
+         <img
+                          src="../assets/images/login.gif"
+                          alt="Logboek Genereren..."
+                          class="w-32"
+                        />
       </div>
-      <div class="w-full max-w-sm mx-auto mt-12 lg:w-96 lg:mt-20 bg-primary-dark rounded-lg p-4">
+      <div class="w-full max-w-sm mx-auto mt-12 lg:w-96  bg-primary-dark rounded-lg p-8">
         <div>
-          <h2 class="mt-6 text-3xl font-extrabold text-primary">
-            My Lightweight
+          <h2 class="mt-6 text-3xl text-center font-extrabold text-primary">
+            Lightweight
           </h2>
         </div>
 
