@@ -1,11 +1,11 @@
 <template>
   <Transition
-    enter-from-class="opacity-0"
+    enter-from-class="opacity-90"
     enter-active-class="transition-opacity duration-300 ease-in-out"
     enter-to-class="opacity-100"
     leave-from-class="opacity-100"
     leave-active-class="transition-opacity duration-300 ease-in-out"
-    leave-to-class="opacity-0"
+    leave-to-class="opacity-90"
     mode="out-in"
   >
     <component :is="layout">

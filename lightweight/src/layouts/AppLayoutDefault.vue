@@ -1,5 +1,7 @@
 <template>
-  <div class="min-h-full  bg-primary-darker text-primary-textBody text-base font-medium tracking-tight">
+  <div
+    class="min-h-full bg-primary-darker text-primary-textBody text-base font-medium tracking-tight"
+  >
     <TransitionRoot as="template" :show="sidebarOpen">
       <Dialog
         as="div"
@@ -26,7 +28,9 @@
           leave-from="translate-x-0"
           leave-to="-translate-x-full"
         >
-          <div class="relative flex flex-col flex-1 w-full max-w-xs bg-primary-dark">
+          <div
+            class="relative flex flex-col flex-1 w-full max-w-xs bg-primary-dark"
+          >
             <TransitionChild
               as="template"
               enter="ease-in-out duration-300"
@@ -49,7 +53,7 @@
             </TransitionChild>
             <div class="flex justify-center">
               <img
-                class="w-auto h-12 lg:h-20 pt-2 "
+                class="w-auto h-12 lg:h-20 pt-2"
                 src="../assets/images/Lightweight.png"
                 alt="Lightweight"
               />
@@ -233,30 +237,44 @@
     <div class="min-h-full">
       <div class="flex flex-col flex-1 h-screen xl:pl-64">
         <div
-          class="stickyz-20 p-8 flex flex-shrink-0 h-16 bg-primary-dark  lg:border-none"
+          class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-primary-dark shadow"
         >
           <button
             type="button"
-            class="px-4 text-gray-400 border-r border-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-light xl:hidden"
+            class="px-4 text-primary focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 xl:hidden"
             @click="sidebarOpen = true"
           >
             <span class="sr-only">Open sidebar</span>
-            <MenuAlt1Icon class="w-6 h-6" aria-hidden="true" />
+            <MenuAlt2Icon class="h-6 w-6" aria-hidden="true" />
           </button>
-          <!-- Header bar -->
-          <div
-            class="flex items-center flex-1 gap-4 px-4 mx-auto md:justify-end sm:px-6 lg:px-8 max-w-screen-2xl md:gap-6"
-          >
-            <div class="w-full max-w-lg lg:max-w-xs"></div>
-            <div
-              class="flex items-center gap-2"
-              :class="{ 'hidden sm:flex': globalState.searchBarExpanded }"
-            >
+          <div class="flex-1 px-4 flex justify-between">
+            <div class="flex-1 flex">
+              <form class="w-full flex md:ml-0" action="#" method="GET">
+                <label for="search-field" class="sr-only">Search</label>
+                <div
+                  class="relative w-full text-gray-400 focus-within:text-gray-600 bg-primary-dark"
+                >
+                  <div
+                    class="absolute inset-y-0 left-0 flex items-center pointer-events-none"
+                  >
+                    <SearchIcon class="h-5 w-5 text-primary" aria-hidden="true" />
+                  </div>
+                  <input
+                    id="search-field"
+                    class="block w-full h-full pl-8 pr-3 py-2 border-transparent bg-primary-dark text-primary placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
+                    placeholder="Search"
+                    type="search"
+                    name="search"
+                  />
+                </div>
+              </form>
+            </div>
+            <div class="ml-4 flex items-center md:ml-6">
               <!-- Profile dropdown -->
-              <Menu as="div" class="relative ml-3" v-if="user">
+              <Menu as="div" class="ml-3 relative" v-if="user">
                 <div>
                   <MenuButton
-                    class="flex items-center max-w-xs text-sm bg-primary rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white lg:p-2 lg:rounded-md "
+                    class="flex items-center max-w-xs text-sm bg-primary rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white lg:p-2 lg:rounded-md"
                   >
                     <img
                       v-if="user.photoURL"
@@ -283,12 +301,12 @@
                   </MenuButton>
                 </div>
                 <transition
-                  enter-active-class="transition duration-100 ease-out"
-                  enter-from-class="transform scale-95 opacity-0"
-                  enter-to-class="transform scale-100 opacity-100"
-                  leave-active-class="transition duration-75 ease-in"
-                  leave-from-class="transform scale-100 opacity-100"
-                  leave-to-class="transform scale-95 opacity-0"
+                  enter-active-class="transition ease-out duration-100"
+                  enter-from-class="transform opacity-0 scale-95"
+                  enter-to-class="transform opacity-100 scale-100"
+                  leave-active-class="transition ease-in duration-75"
+                  leave-from-class="transform opacity-100 scale-100"
+                  leave-to-class="transform opacity-0 scale-95"
                 >
                   <MenuItems
                     class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-primary rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
@@ -310,7 +328,6 @@
             </div>
           </div>
         </div>
-
         <div class="flex flex-col h-full">
           <Transition
             enter-from-class="opacity-0"
@@ -354,8 +371,11 @@ import {
   StatusOfflineIcon,
   StatusOnlineIcon,
   MenuAlt1Icon,
+  MenuAlt2Icon,
+  SearchIcon,
+  BellIcon,
 } from "@heroicons/vue/outline";
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, signOut } from "firebase/auth";
 
 import { onMounted, onBeforeUnmount, ref } from "vue";
 
@@ -373,19 +393,17 @@ const user = ref();
 const loggedIn = ref(false);
 
 getAuth().onAuthStateChanged((u) => {
-    user.value = u;
-
-
-  });
-  function logOut() {
-    const auth = getAuth();
-    signOut(auth)
-      .then(() => {
-        // Sign-out successful.s
-        router.push('/login');
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  user.value = u;
+});
+function logOut() {
+  const auth = getAuth();
+  signOut(auth)
+    .then(() => {
+      // Sign-out successful.s
+      router.push("/login");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
 </script>

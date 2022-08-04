@@ -1,6 +1,6 @@
 <template>
   <button
-    class="btn btn--primary"
+    class="btn text-secondary-textBody  bg-buttonPrimary hover:bg-buttonPrimary-hover"
     :class="{
       'pointer-events-none cursor-not-allowed': loading,
       'pointer-events-none opacity-70 cursor-not-allowed': isDisabled,
