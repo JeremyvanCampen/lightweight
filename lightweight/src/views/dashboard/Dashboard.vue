@@ -7,7 +7,7 @@
       class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 m-8"
     >
       <li
-        v-for="(exercise, index) in exercises.value"
+        v-for="(exercise, index) of filteredAndSorted"
         :key="exercise.id"
         class="col-span-1 bg-bg rounded-lg shadow cursor-pointer hover:border-2 hover:border-buttonPrimary"
         @click="viewLogs(exercise.id)"
@@ -29,7 +29,7 @@
                 class="relative -mr-px w-0 flex-1 inline-flex items-center justify-left pb-1 text-4xl text-primary-textBody font-regular border border-transparent rounded-bl-lg"
               >
                 <span v-if="exercise.exerciseEstimatedMax" class="ml-3">
-                 1RM {{ exercise.exerciseEstimatedMax }} KG
+                  1RM {{ exercise.exerciseEstimatedMax }} KG
                 </span>
                 <span v-else class="ml-3">No data yet</span>
               </p>
@@ -41,7 +41,7 @@
 
     <div class="fixed bottom-10 right-10">
       <button
-        v-on:click="openCreateExerciseModal()"
+        v-on:click="test()"
         type="button"
         class="p-6 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
       >
@@ -62,7 +62,7 @@ import { PlusSmIcon as PlusSmIconOutline } from "@heroicons/vue/outline";
 import { TransitionRoot } from "@headlessui/vue";
 import CreateExercise from "@/components/Exercise/CreateExercise.vue";
 import { getAuth, signOut } from "firebase/auth";
-import { onUnmounted, ref } from "vue";
+import { onUnmounted, ref, computed } from "vue";
 import { db } from "@/firebase/firebase.js";
 import { useRouter } from "vue-router";
 import {
@@ -72,15 +72,35 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
+import { useUiStateComposable } from "@/composables/uistate-composable";
+
+const { globalState } = useUiStateComposable();
 
 const isExerciseModalOpen = ref(false);
 const user = ref();
 const router = useRouter();
-let exercises: object[] = ref([]);
+var exercises = ref([]);
+const filteredAndSorted = computed(() =>
+  Array.isArray(exercises.value)
+    ? exercises.value
+        .filter((exercise) => {
+          return exercise.exerciseName
+            .toLowerCase()
+            .includes(globalState.searchTerm.toLowerCase());
+        })
+        .sort(compare)
+    : []
+);
+
+function compare(a, b) {
+  if (a.name < b.name) return -1;
+  if (a.name > b.name) return 1;
+  return 0;
+}
 
 getAuth().onAuthStateChanged((u) => {
   user.value = u;
-  exercises.value = getReactiveExercises();
+  getReactiveExercises();
 });
 
 function getReactiveExercises() {
@@ -90,8 +110,6 @@ function getReactiveExercises() {
     where("createdByUid", "==", user.value.uid),
     orderBy("timeStampCreated", "desc")
   );
-
-  let exercises = ref([]);
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
     exercises.value = querySnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -99,7 +117,6 @@ function getReactiveExercises() {
     }));
   });
   onUnmounted(unsubscribe);
-  return exercises;
 }
 
 function removeTraining(index) {

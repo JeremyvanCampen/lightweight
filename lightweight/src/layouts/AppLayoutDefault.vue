@@ -54,7 +54,7 @@
             <div class="flex justify-center">
               <img
                 class="w-auto h-12 lg:h-20 pt-2"
-                src="../assets/images/Lightweight.png"
+                src="../assets/logo.png"
                 alt="Lightweight"
               />
             </div>
@@ -150,7 +150,7 @@
         <div class="flex justify-center">
           <img
             class="w-auto h-12 px-2 pt-2 lg:h-20"
-            src="../assets/images/Lightweight.png"
+            src="../assets/logo.png"
             alt="Lightweight"
           />
         </div>
@@ -268,6 +268,7 @@
                     placeholder="Search"
                     type="search"
                     name="search"
+                    v-model="globalState.searchTerm"
                   />
                 </div>
               </form>
