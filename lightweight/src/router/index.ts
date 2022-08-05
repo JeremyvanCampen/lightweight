@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Dashboard from '../views/dashboard/Dashboard.vue';
+import Logs from '../views/logs/Logs.vue'
 // @ts-ignore
 import { getCurrentUser } from '../firebase/firebase.js';
 import Login from '../views/Login.vue';
@@ -28,6 +29,14 @@ const routes: Array<RouteRecordRaw> = [
     component: Login,
     meta: {
       layout: 'AppLayoutLogin',
+    },
+  },
+  {
+    path: '/logs/:exerciseID',
+    name: 'logs',
+    component: Logs,
+    meta: {
+      requiresAuth: true,
     },
   },
 ]

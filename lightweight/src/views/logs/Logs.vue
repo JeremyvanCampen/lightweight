@@ -6,10 +6,9 @@
       class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 m-8"
     >
       <li
-        v-for="(exercise, index) in exercises.value"
-        :key="exercise.id"
+        v-for="(log, index) in logs.value"
+        :key="log.id"
         class="col-span-1 bg-primary-dark rounded-lg shadow cursor-pointer hover:border-2 hover:border-buttonPrimary"
-        @click="viewLogs(exercise.id)"
         :style="{ transitionDelay: 0.02 * index + 's' }"
       >
         <div class="-mt-px flex">
@@ -17,7 +16,7 @@
             <p
               class="relative -mr-px w-0 flex-1 inline-flex items-center justify-left pt-6 text-base text-primary-textBody font-light border border-transparent rounded-bl-lg"
             >
-              <span class="ml-3">{{ exercise.exerciseName }}</span>
+              <span class="ml-3">{{ log.exerciseName }}</span>
             </p>
           </div>
         </div>
@@ -27,10 +26,10 @@
               <p
                 class="relative -mr-px w-0 flex-1 inline-flex items-center justify-left pb-1 text-4xl text-primary-textBody font-regular border border-transparent rounded-bl-lg"
               >
-                <span v-if="exercise.exerciseEstimatedMax" class="ml-3">{{
-                  exercise.exerciseEstimatedMax
+                <span v-if="log.exerciseEstimatedMax" class="ml-3">{{
+                  log.exerciseEstimatedMax
                 }}</span>
-                <span v-else class="ml-3">No data yet</span>
+                <span v-else class="ml-3">Logs</span>
               </p>
             </div>
           </div>
@@ -40,16 +39,17 @@
 
     <div class="fixed bottom-10 right-10">
       <button
-        v-on:click="openCreateExerciseModal()"
+        v-on:click="openCreateLogModal()"
         type="button"
         class="p-6 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
       >
         <PlusSmIconOutline class="h-6 w-6" aria-hidden="true" />
       </button>
     </div>
-    <CreateExercise
-      :createExerciseModalOpen="isExerciseModalOpen"
-      @closeCreateExerciseModal="closeCreateExerciseModal()"
+    <CreateLog
+      :createLogModalOpen="isCreateLogModalOpen"
+      :exerciseID="route.params.exerciseID"
+      @closeCreateLogModal="closeCreateLogModal()"
     />
   </div>
 </template>
@@ -59,11 +59,11 @@ import { MailIcon, PhoneIcon } from "@heroicons/vue/solid";
 import { PlusSmIcon as PlusSmIconSolid } from "@heroicons/vue/solid";
 import { PlusSmIcon as PlusSmIconOutline } from "@heroicons/vue/outline";
 import { TransitionRoot } from "@headlessui/vue";
-import CreateExercise from "@/components/Exercise/CreateExercise.vue";
+import CreateLog from "@/components/Log/CreateLog.vue";
 import { getAuth, signOut } from "firebase/auth";
 import { onUnmounted, ref } from "vue";
 import { db } from "@/firebase/firebase.js";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import {
   collection,
   query,
@@ -72,56 +72,48 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
-const isExerciseModalOpen = ref(false);
+const isCreateLogModalOpen = ref(false);
 const user = ref();
 const router = useRouter();
-let exercises: object[] = ref([]);
+const route = useRoute();
+let logs: object[] = ref([]);
 
 getAuth().onAuthStateChanged((u) => {
   user.value = u;
-  exercises.value = getReactiveExercises();
+  logs.value = getReactiveLogs();
 });
 
-function getReactiveExercises() {
-  const exercisesCollection = collection(db, "exercises");
+function getReactiveLogs() {
+  const exercisesCollection = collection(db, "exercises", route.params.exerciseID, 'logs');
   const q = query(
     exercisesCollection,
-    where("createdByUid", "==", user.value.uid),
     orderBy("timeStampCreated", "desc")
   );
 
-  let exercises = ref([]);
+  let logs = ref([]);
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    exercises.value = querySnapshot.docs.map((doc) => ({
+    logs.value = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
   });
   onUnmounted(unsubscribe);
-  return exercises;
+  return logs;
 }
 
 function removeTraining(index) {
   console.log(index);
-  people.value.splice(index, 1);
+  //people.value.splice(index, 1);
 }
 
-function openCreateExerciseModal() {
-  isExerciseModalOpen.value = true;
+function openCreateLogModal() {
+  isCreateLogModalOpen.value = true;
 }
 
-function closeCreateExerciseModal() {
-  isExerciseModalOpen.value = false;
+function closeCreateLogModal() {
+  isCreateLogModalOpen.value = false;
 }
 
-function viewLogs(id) {
-  router.push({
-    name: "logs",
-    params: {
-      exerciseID: id,
-    },
-  });
-}
 </script>
 
 <style>

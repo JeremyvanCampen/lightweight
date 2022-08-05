@@ -69,7 +69,7 @@
                             type="text"
                             name="description"
                             id="description"
-                            v-model="formData.name"
+                            v-model="formData.exerciseName"
                             class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                             :class="
                               formError
@@ -173,8 +173,8 @@ import {
   QrcodeIcon,
   PhotographIcon,
 } from "@heroicons/vue/outline";
-import { db, storage } from "@/firebase/firebase.js";
 import Button from "../../components/Button.vue";
+import { db } from "@/firebase/firebase.js";
 import {
   collection,
   addDoc,
@@ -188,12 +188,7 @@ import {
   setDoc,
   getDocsFromCache,
 } from "firebase/firestore";
-import {
-  getDownloadURL,
-  ref as firebaseRef,
-  uploadBytesResumable,
-  deleteObject,
-} from "firebase/storage";
+
 import moment from "moment";
 import { getAuth } from "firebase/auth";
 
@@ -213,7 +208,7 @@ const props = defineProps({
 const emit = defineEmits(["closeCreateExerciseModal"]);
 
 const formData = ref({
-  name: "",
+  exerciseName: ""
 });
 
 getAuth().onAuthStateChanged((u) => {
@@ -226,15 +221,44 @@ async function submit() {
 }
 
 async function saveExercise() {
-  //todo saving
-  loading.value = false;
+  const exercisesCollection = collection(
+      db,
+      'exercises'
+    );
 
-  closeCreateExerciseModal();
+    addDoc(exercisesCollection, {
+      exerciseName: formData.value.exerciseName,
+      exerciseEstimatedMax: '',
+      createdByName: user.value.email,
+      createdByUid: user.value.uid,
+      createdDate: moment().format('DD-MM-YYYY HH:mm'),
+      timeStampCreated: new Date(),
+    })
+      .then((result) => {
+         closeCreateExerciseModal();
+      })
+      .catch((error) => {
+        switch (error.code) {
+          case 'unauthenticated': {
+            formError.value =
+              'U bent niet gemachtigd om de opgegeven bewerking uit te voeren';
+            break;
+          }
+          case 'permission-denied': {
+            formError.value =
+              'U bent niet gemachtigd om de opgegeven bewerking uit te voeren';
+            break;
+          }
+        }
+      })
+      .finally(() => {
+        loading.value = false;
+      });
 }
 
 function closeCreateExerciseModal() {
   formData.value = {
-    name: "",
+    exerciseName: ""
   };
   emit("closeCreateExerciseModal");
 }
