@@ -1,5 +1,5 @@
 <template>
-  <div class="flex min-h-full bg-primary-darker text-primary-textBody text-base font-medium">
+  <div class="flex min-h-full bg-bg-600 text-primary-textBody text-base font-medium">
 
     <div
       class="relative flex flex-col justify-center flex-1 px-4 "
@@ -13,7 +13,7 @@
                           class="w-32"
                         />
       </div>
-      <div class="w-full max-w-sm mx-auto mt-12 lg:w-96  bg-primary-dark rounded-lg p-8">
+      <div class="w-full max-w-sm mx-auto mt-12 lg:w-96  bg-bg rounded-lg p-8">
         <div>
           <h2 class="mt-6 text-3xl text-center font-light text-primary">
             Lightweight

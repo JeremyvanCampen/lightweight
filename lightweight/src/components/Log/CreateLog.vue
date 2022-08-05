@@ -19,7 +19,7 @@
             leave-to="opacity-0"
           >
             <DialogOverlay
-              class="fixed inset-0 transition-opacity bg-primary-darker bg-opacity-75"
+              class="fixed inset-0 transition-opacity bg-bg-600 bg-opacity-75"
             />
           </TransitionChild>
 
@@ -38,7 +38,7 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div
-              class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-primary-dark shadow-xl sm:rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:p-6 md:max-w-4xl"
+              class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-bg shadow-xl sm:rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:p-6 md:max-w-4xl"
             >
               <form
                 action="#"
@@ -319,6 +319,11 @@ const props = defineProps({
     required: true,
     default: () => "",
   },
+  exercise: {
+    type: Object,
+    required: true,
+    default: () => {},
+  },
 });
 
 const emit = defineEmits(["closeCreateLogModal"]);
@@ -337,11 +342,26 @@ getAuth().onAuthStateChanged((u) => {
 
 async function submit() {
   loading.value = true;
-  saveExercise();
+  if (formData.value.sets.length > 0) {
+    saveExercise();
+  } else {
+    formError.value = "Atleast one set needs to be added to save a new log";
+    loading.value = false;
+  }
 }
 
 async function saveExercise() {
   const logsCollection = collection(db, "exercises", props.exerciseID, "logs");
+
+  var oneRM = 0;
+
+  for (var set of formData.value.sets) {
+    const oneRMCalculated = set.weight * (36 / (37 - set.reps));
+
+    if (oneRMCalculated > oneRM) {
+      oneRM = oneRMCalculated;
+    }
+  }
 
   addDoc(logsCollection, {
     sets: formData.value.sets,
@@ -350,6 +370,15 @@ async function saveExercise() {
     createdDate: moment().format("DD-MM-YYYY HH:mm"),
     timeStampCreated: new Date(),
   })
+    .then((result) => {
+      if (oneRM > props.exercise.exerciseEstimatedMax) {
+        return updateDoc(doc(db, "exercises", props.exerciseID), {
+          exerciseEstimatedMax: oneRM.toFixed(1),
+        });
+      } else {
+        closeCreateLogModal();
+      }
+    })
     .then((result) => {
       closeCreateLogModal();
     })
@@ -373,8 +402,7 @@ async function saveExercise() {
 }
 
 function addNewSet() {
-  if (formData.value.setToAdd.weight % 1 != 0) 
-  {
+  if (formData.value.setToAdd.weight % 1 != 0) {
     formData.value.setToAdd.weight = parseFloat(
       formData.value.setToAdd.weight
     ).toFixed(2);
@@ -398,6 +426,7 @@ function closeCreateLogModal() {
       weight: "",
     },
   };
+  formError.value = "";
 
   emit("closeCreateLogModal");
 }

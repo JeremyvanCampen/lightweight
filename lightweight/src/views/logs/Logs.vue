@@ -1,5 +1,18 @@
 <template>
-  <div class="flex flex-col flex-1 w-full mx-auto bg-primary-darker">
+  <div class="flex flex-col flex-1 w-full mx-auto bg-bg-600">
+    <div class="flex flex-row">
+      <div
+        class="ml-8 mr-4 my-8 bg-bg rounded-lg shadow w-min p-3"
+        @click="$router.go(-1)"
+      >
+        <ChevronLeftIcon class="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
+      </div>
+
+      <h2 class="my-8 self-center text-3xl font-light text-primary" v-if="exercise">
+        {{ exercise.exerciseName }}
+      </h2>
+    </div>
+
     <TransitionGroup
       name="list"
       tag="ul"
@@ -8,7 +21,7 @@
       <li
         v-for="(log, index) in logs.value"
         :key="log.id"
-        class="col-span-1 bg-primary-dark rounded-lg shadow cursor-pointer hover:border-2 hover:border-buttonPrimary"
+        class="col-span-1 bg-bg rounded-lg shadow cursor-pointer hover:border-2 hover:border-buttonPrimary"
         :style="{ transitionDelay: 0.02 * index + 's' }"
       >
         <div class="-mt-px flex">
@@ -16,7 +29,7 @@
             <p
               class="relative -mr-px w-0 flex-1 inline-flex items-center justify-left pt-6 text-base text-primary-textBody font-light border border-transparent rounded-bl-lg"
             >
-              <span class="ml-3">{{ log.exerciseName }}</span>
+              <span class="ml-3">Sets {{ log.sets.length }}</span>
             </p>
           </div>
         </div>
@@ -26,10 +39,7 @@
               <p
                 class="relative -mr-px w-0 flex-1 inline-flex items-center justify-left pb-1 text-4xl text-primary-textBody font-regular border border-transparent rounded-bl-lg"
               >
-                <span v-if="log.exerciseEstimatedMax" class="ml-3">{{
-                  log.exerciseEstimatedMax
-                }}</span>
-                <span v-else class="ml-3">Logs</span>
+                <span class="ml-3">{{ log.createdDate }}</span>
               </p>
             </div>
           </div>
@@ -49,13 +59,14 @@
     <CreateLog
       :createLogModalOpen="isCreateLogModalOpen"
       :exerciseID="route.params.exerciseID"
+      :exercise="exercise"
       @closeCreateLogModal="closeCreateLogModal()"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { MailIcon, PhoneIcon } from "@heroicons/vue/solid";
+import { MailIcon, PhoneIcon, ChevronLeftIcon } from "@heroicons/vue/solid";
 import { PlusSmIcon as PlusSmIconSolid } from "@heroicons/vue/solid";
 import { PlusSmIcon as PlusSmIconOutline } from "@heroicons/vue/outline";
 import { TransitionRoot } from "@headlessui/vue";
@@ -70,25 +81,44 @@ import {
   orderBy,
   where,
   onSnapshot,
+  doc,
 } from "firebase/firestore";
 
 const isCreateLogModalOpen = ref(false);
 const user = ref();
 const router = useRouter();
 const route = useRoute();
-let logs: object[] = ref([]);
+let logs = ref([]);
+let exercise = getReactiveExercise();
 
 getAuth().onAuthStateChanged((u) => {
   user.value = u;
   logs.value = getReactiveLogs();
 });
 
-function getReactiveLogs() {
-  const exercisesCollection = collection(db, "exercises", route.params.exerciseID, 'logs');
-  const q = query(
-    exercisesCollection,
-    orderBy("timeStampCreated", "desc")
+function getReactiveExercise() {
+  let exercise = ref({});
+  const unsubscribe = onSnapshot(
+    doc(db, "exercises", route.params.exerciseID),
+    (doc) => {
+      exercise.value = {
+        id: doc.id,
+        ...doc.data(),
+      };
+    }
   );
+  onUnmounted(unsubscribe);
+  return exercise;
+}
+
+function getReactiveLogs() {
+  const exercisesCollection = collection(
+    db,
+    "exercises",
+    route.params.exerciseID,
+    "logs"
+  );
+  const q = query(exercisesCollection, orderBy("timeStampCreated", "desc"));
 
   let logs = ref([]);
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -113,7 +143,6 @@ function openCreateLogModal() {
 function closeCreateLogModal() {
   isCreateLogModalOpen.value = false;
 }
-
 </script>
 
 <style>

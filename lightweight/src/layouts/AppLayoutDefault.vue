@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-full bg-primary-darker text-primary-textBody text-base font-medium tracking-tight"
+    class="min-h-full bg-bg-600 text-primary-textBody text-base font-medium tracking-tight"
   >
     <TransitionRoot as="template" :show="sidebarOpen">
       <Dialog
@@ -29,7 +29,7 @@
           leave-to="-translate-x-full"
         >
           <div
-            class="relative flex flex-col flex-1 w-full max-w-xs bg-primary-dark"
+            class="relative flex flex-col flex-1 w-full max-w-xs bg-bg"
           >
             <TransitionChild
               as="template"
@@ -59,7 +59,7 @@
               />
             </div>
             <nav
-              class="flex-shrink-0 h-full pt-5 pb-4 mt-5 overflow-y-auto divide-y divide-primary-dark"
+              class="flex-shrink-0 h-full pt-5 pb-4 mt-5 overflow-y-auto divide-y divide-bg"
               aria-label="Sidebar"
             >
               <div class="px-2 space-y-1">
@@ -75,8 +75,8 @@
                       :href="href"
                       :class="[
                         isActive
-                          ? 'bg-primary-darker text-white'
-                          : 'text-secondary hover:bg-primary-dark hover:text-white',
+                       ? 'bg-bg-600 text-primary-textBody'
+                      : 'text-primary-textBody hover:bg-bg-400',
                         'group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md',
                       ]"
                       @click="navigate"
@@ -87,8 +87,8 @@
                         class="flex-shrink-0 w-6 h-6 mr-4"
                         :class="[
                           isActive
-                            ? 'text-white'
-                            : 'text-secondary group-hover:text-white',
+                           ? 'text-primary-textBody'
+                        : 'text-primary-textBody ',
                         ]"
                         aria-hidden="true"
                       />
@@ -120,8 +120,8 @@
                           :href="href"
                           :class="[
                             isActive
-                              ? 'bg-primary-darker text-white'
-                              : 'text-secondary hover:bg-primary-dark hover:text-white',
+                              ? 'bg-bg-600 text-white'
+                              : 'text-secondary hover:bg-bg hover:text-white',
                             'group flex items-center  pl-12 px-2 py-2 text-sm leading-6 font-medium rounded-md',
                           ]"
                           @click="navigate"
@@ -146,7 +146,7 @@
     <!-- Static sidebar for desktop -->
     <div class="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0">
       <!-- Sidebar component, swap this element with another sidebar if you like -->
-      <div class="flex flex-col flex-grow overflow-y-auto bg-primary-dark">
+      <div class="flex flex-col flex-grow overflow-y-auto bg-bg">
         <div class="flex justify-center">
           <img
             class="w-auto h-12 px-2 pt-2 lg:h-20"
@@ -155,7 +155,7 @@
           />
         </div>
         <nav
-          class="flex flex-col flex-1 pt-5 pb-4 mt-5 overflow-y-auto divide-y divide-primary-dark"
+          class="flex flex-col flex-1 pt-5 pb-4 mt-5 overflow-y-auto divide-y divide-bg"
           aria-label="Sidebar"
         >
           <div class="px-2 space-y-1">
@@ -171,8 +171,8 @@
                   :href="href"
                   :class="[
                     isActive
-                      ? 'bg-primary-darker text-white'
-                      : 'text-secondary hover:bg-primary-dark hover:text-white',
+                      ? 'bg-bg-600 text-primary-textBody'
+                      : 'text-primary-textBody hover:bg-bg-400',
                     'group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md',
                   ]"
                   @click="navigate"
@@ -183,8 +183,8 @@
                     class="flex-shrink-0 w-6 h-6 mr-4"
                     :class="[
                       isActive
-                        ? 'text-white'
-                        : 'text-secondary group-hover:text-white',
+                        ? 'text-primary-textBody'
+                        : 'text-primary-textBody ',
                     ]"
                     aria-hidden="true"
                   />
@@ -216,8 +216,8 @@
                       :href="href"
                       :class="[
                         isActive
-                          ? 'bg-primary-darker text-white'
-                          : 'text-secondary hover:bg-primary-dark hover:text-white',
+                           ? 'bg-bg-600 text-primary-textBody'
+                      : 'text-primary-textBody hover:bg-bg-400',
                         'group flex items-center  pl-12 px-2 py-2 text-sm leading-6 font-medium rounded-md',
                       ]"
                       @click="navigate"
@@ -237,7 +237,7 @@
     <div class="min-h-full">
       <div class="flex flex-col flex-1 h-screen xl:pl-64">
         <div
-          class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-primary-dark shadow"
+          class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-bg shadow"
         >
           <button
             type="button"
@@ -252,7 +252,7 @@
               <form class="w-full flex md:ml-0" action="#" method="GET">
                 <label for="search-field" class="sr-only">Search</label>
                 <div
-                  class="relative w-full text-gray-400 focus-within:text-gray-600 bg-primary-dark"
+                  class="relative w-full text-gray-400 focus-within:text-gray-600 bg-bg"
                 >
                   <div
                     class="absolute inset-y-0 left-0 flex items-center pointer-events-none"
@@ -264,7 +264,7 @@
                   </div>
                   <input
                     id="search-field"
-                    class="block w-full h-full pl-8 pr-3 py-2 border-transparent bg-primary-dark text-primary placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
+                    class="block w-full h-full pl-8 pr-3 py-2 border-transparent bg-bg text-primary placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
                     placeholder="Search"
                     type="search"
                     name="search"

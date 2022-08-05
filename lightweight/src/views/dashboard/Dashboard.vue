@@ -1,5 +1,6 @@
 <template>
-  <div class="flex flex-col flex-1 w-full mx-auto bg-primary-darker">
+  <div class="flex flex-col flex-1 w-full mx-auto bg-bg-600">
+    <h2 class="m-8 text-3xl font-light text-primary">Exercises</h2>
     <TransitionGroup
       name="list"
       tag="ul"
@@ -8,7 +9,7 @@
       <li
         v-for="(exercise, index) in exercises.value"
         :key="exercise.id"
-        class="col-span-1 bg-primary-dark rounded-lg shadow cursor-pointer hover:border-2 hover:border-buttonPrimary"
+        class="col-span-1 bg-bg rounded-lg shadow cursor-pointer hover:border-2 hover:border-buttonPrimary"
         @click="viewLogs(exercise.id)"
         :style="{ transitionDelay: 0.02 * index + 's' }"
       >
@@ -27,9 +28,9 @@
               <p
                 class="relative -mr-px w-0 flex-1 inline-flex items-center justify-left pb-1 text-4xl text-primary-textBody font-regular border border-transparent rounded-bl-lg"
               >
-                <span v-if="exercise.exerciseEstimatedMax" class="ml-3">{{
-                  exercise.exerciseEstimatedMax
-                }}</span>
+                <span v-if="exercise.exerciseEstimatedMax" class="ml-3">
+                 1RM {{ exercise.exerciseEstimatedMax }} KG
+                </span>
                 <span v-else class="ml-3">No data yet</span>
               </p>
             </div>

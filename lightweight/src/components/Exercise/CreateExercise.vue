@@ -19,7 +19,7 @@
             leave-to="opacity-0"
           >
             <DialogOverlay
-              class="fixed inset-0 transition-opacity bg-primary-darker bg-opacity-75"
+              class="fixed inset-0 transition-opacity bg-bg-600 bg-opacity-75"
             />
           </TransitionChild>
 
@@ -38,7 +38,7 @@
             leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div
-              class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-primary-dark shadow-xl sm:rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:p-6 md:max-w-4xl"
+              class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-bg shadow-xl sm:rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:p-6 md:max-w-4xl"
             >
               <form
                 action="#"

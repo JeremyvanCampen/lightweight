@@ -6,6 +6,16 @@ module.exports = {
         body: ["Roboto"],
       },
       colors: {
+        bg:
+        {
+          DEFAULT: "#1e1e1e",
+          '100': "#d2d2d2",
+          '200': "#a5a5a5",
+          '300': "#787878",
+          '400': "#4b4b4b",
+          '500': "#181818", 
+          '600': "#121212", 
+        },
         primary: {
           light: "#ffd919",
           DEFAULT: "#e5e5e5",
@@ -14,8 +24,6 @@ module.exports = {
           textBody: "#e5e5e5",
           textSub: "#e3e3e3",
           textTitle: "#858585",
-          dark: "#1e1e1e",
-          darker: "#121212",
         },
         buttonPrimary:
         {
