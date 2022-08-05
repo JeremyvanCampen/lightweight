@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col flex-1 w-full mx-auto max-w-screen-2xl bg-primary-darker"
+    class="flex flex-col flex-1 w-full mx-auto  bg-primary-darker"
   >
     <TransitionGroup
       name="list"
@@ -38,13 +38,17 @@
 
     <div class="fixed bottom-10 right-10">
       <button
-        v-on:click="addTraining()"
+        v-on:click="openCreateExerciseModal()"
         type="button"
         class="p-6 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
       >
         <PlusSmIconOutline class="h-6 w-6" aria-hidden="true" />
       </button>
     </div>
+        <CreateExercise
+      :createExerciseModalOpen="isExerciseModalOpen"
+      @closeCreateExerciseModal="closeCreateExerciseModal()"
+    />
   </div>
 </template>
 
@@ -54,7 +58,10 @@ import { PlusSmIcon as PlusSmIconSolid } from "@heroicons/vue/solid";
 import { PlusSmIcon as PlusSmIconOutline } from "@heroicons/vue/outline";
 import { ref } from "vue";
 import { TransitionRoot } from "@headlessui/vue";
+import CreateExercise from "@/components/Exercise/CreateExercise.vue";
 
+
+  const isExerciseModalOpen = ref(false);
 
 let people: object[] = ref([
   {
@@ -88,6 +95,14 @@ function addTraining() {
   {
     console.log(index)
     people.value.splice(index, 1);
+  }
+
+  function openCreateExerciseModal() {
+    isExerciseModalOpen.value = true;
+  }
+
+  function closeCreateExerciseModal() {
+    isExerciseModalOpen.value = false;
   }
 </script>
 

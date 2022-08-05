@@ -257,7 +257,10 @@
                   <div
                     class="absolute inset-y-0 left-0 flex items-center pointer-events-none"
                   >
-                    <SearchIcon class="h-5 w-5 text-primary" aria-hidden="true" />
+                    <SearchIcon
+                      class="h-5 w-5 text-primary"
+                      aria-hidden="true"
+                    />
                   </div>
                   <input
                     id="search-field"
@@ -376,21 +379,19 @@ import {
   BellIcon,
 } from "@heroicons/vue/outline";
 import { getAuth, signOut } from "firebase/auth";
-
 import { onMounted, onBeforeUnmount, ref } from "vue";
-
 import { useUiStateComposable } from "@/composables/uistate-composable";
-
 import { ChevronDownIcon } from "@heroicons/vue/solid";
+import { useRouter, useRoute } from "vue-router";
 
 const { globalState } = useUiStateComposable();
-
 const sidebarOpen = ref(false);
 const navigation = ref([
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
 ]);
 const user = ref();
 const loggedIn = ref(false);
+const router = useRouter();
 
 getAuth().onAuthStateChanged((u) => {
   user.value = u;
