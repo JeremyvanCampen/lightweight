@@ -41,7 +41,7 @@
 
     <div class="fixed bottom-10 right-10">
       <button
-        v-on:click="test()"
+        v-on:click="openCreateExerciseModal()"
         type="button"
         class="p-6 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
       >
