@@ -1,6 +1,6 @@
 {
-  "name": "lightweight",
-  "version": "0.1.0",
+  "name": "Lightweight",
+  "version": "0.1.5",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
