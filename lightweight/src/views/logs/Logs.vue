@@ -12,6 +12,17 @@
         {{ exercise.exerciseName }}
       </h2>
     </div>
+        <div class="flex flex-row">
+      <div
+        class="ml-8 mr-8 bg-bg rounded-lg shadow w-full p-2"
+      >
+      <div>
+          <ChevronDownIcon class="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
+          <label>Date created</label>
+      </div>
+      
+      </div>
+    </div>
 
     <TransitionGroup
       name="list"
@@ -19,7 +30,7 @@
       class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 m-8"
     >
       <li
-        v-for="(log, index) in logs.value"
+        v-for="(log, index) in filteredAndSorted"
         :key="log.id"
         class="col-span-1 bg-bg rounded-lg shadow cursor-pointer hover:border-2 hover:border-buttonPrimary"
         :style="{ transitionDelay: 0.02 * index + 's' }"
@@ -66,13 +77,13 @@
 </template>
 
 <script setup lang="ts">
-import { MailIcon, PhoneIcon, ChevronLeftIcon } from "@heroicons/vue/solid";
+import { MailIcon, PhoneIcon, ChevronLeftIcon, ChevronDownIcon } from "@heroicons/vue/solid";
 import { PlusSmIcon as PlusSmIconSolid } from "@heroicons/vue/solid";
 import { PlusSmIcon as PlusSmIconOutline } from "@heroicons/vue/outline";
 import { TransitionRoot } from "@headlessui/vue";
 import CreateLog from "@/components/Log/CreateLog.vue";
 import { getAuth, signOut } from "firebase/auth";
-import { onUnmounted, ref } from "vue";
+import { onUnmounted, ref, computed } from "vue";
 import { db } from "@/firebase/firebase.js";
 import { useRouter, useRoute } from "vue-router";
 import {
@@ -83,17 +94,39 @@ import {
   onSnapshot,
   doc,
 } from "firebase/firestore";
+ import Grid from 'gridjs-vue'
+ import { useUiStateComposable } from "@/composables/uistate-composable";
+
+const { globalState } = useUiStateComposable();
+
+const filteredAndSorted = computed(() =>
+  Array.isArray(logs.value)
+    ? logs.value
+        .filter((log) => {
+          return log.createdDate
+            .toLowerCase()
+            .includes(globalState.searchTerm.toLowerCase());
+        })
+        .sort(compare)
+    : []
+);
+
+function compare(a, b) {
+  if (a.name < b.name) return -1;
+  if (a.name > b.name) return 1;
+  return 0;
+}
 
 const isCreateLogModalOpen = ref(false);
 const user = ref();
 const router = useRouter();
 const route = useRoute();
-let logs = ref([]);
+var logs = ref([]);
 let exercise = getReactiveExercise();
 
 getAuth().onAuthStateChanged((u) => {
   user.value = u;
-  logs.value = getReactiveLogs();
+  getReactiveLogs();
 });
 
 function getReactiveExercise() {
@@ -120,7 +153,6 @@ function getReactiveLogs() {
   );
   const q = query(exercisesCollection, orderBy("timeStampCreated", "desc"));
 
-  let logs = ref([]);
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
     logs.value = querySnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -128,7 +160,6 @@ function getReactiveLogs() {
     }));
   });
   onUnmounted(unsubscribe);
-  return logs;
 }
 
 function removeTraining(index) {
