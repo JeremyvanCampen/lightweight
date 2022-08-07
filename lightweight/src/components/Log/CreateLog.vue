@@ -48,6 +48,11 @@
               >
                 <div class="h-full">
                   <h2 class="text-3xl font-light text-primary">Create log</h2>
+                  <label
+                    class="text-right text-sm font-light text-primary-textTitle pr-4"
+                  >
+                    {{ exercise.exerciseName }}
+                  </label>
                   <div class="space-y-6 sm:p-6">
                     <div v-if="formError" class="p-4 rounded-md bg-red-50">
                       <div class="flex">
@@ -67,14 +72,14 @@
                           </svg>
                         </div>
                         <div class="ml-3">
-                          <h3 class="mb-0 text-sm font-medium text-red-800">
+                          <h3 class="mb-0 text-sm font-light text-red-800">
                             {{ formError }}
                           </h3>
                         </div>
                       </div>
                     </div>
                     <h6
-                      class="text-primary-textTitle font-light"
+                      class="text-primary-textBody font-medium pt-4"
                       v-if="formData.sets.length > 0"
                     >
                       All sets
@@ -150,7 +155,7 @@
                         <input
                           type="number"
                           step=".01"
-                          required
+                          :required="!exercise.isBodyWeight"
                           v-model="set.weight"
                           class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm required"
                           :class="
@@ -221,8 +226,10 @@
                         type="button"
                         class="absolute top-1/2 left-1/2 p-2 disabled:bg-primary transform -translate-x-1/2 -translate-y-1/2 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
                         :disabled="
-                          !formData.setToAdd.reps > 0 ||
-                          !formData.setToAdd.weight > 0
+                          !exercise.isBodyWeight
+                            ? !formData.setToAdd.reps > 0 ||
+                              !formData.setToAdd.weight > 0
+                            : !formData.setToAdd.reps > 0
                         "
                       >
                         <PlusSmIconOutline class="h-6 w-6" aria-hidden="true" />
@@ -349,13 +356,15 @@ async function submit() {
 async function saveExercise() {
   const logsCollection = collection(db, "exercises", props.exerciseID, "logs");
 
-  var oneRM = 0;
+  if (!props.exercise.isBodyWeight) {
+    var oneRM = 0;
 
-  for (var set of formData.value.sets) {
-    const oneRMCalculated = set.weight * (36 / (37 - set.reps));
+    for (var set of formData.value.sets) {
+      const oneRMCalculated = set.weight * (36 / (37 - set.reps));
 
-    if (oneRMCalculated > oneRM) {
-      oneRM = oneRMCalculated;
+      if (oneRMCalculated > oneRM) {
+        oneRM = oneRMCalculated;
+      }
     }
   }
 
@@ -367,7 +376,7 @@ async function saveExercise() {
     timeStampCreated: new Date(),
   })
     .then((result) => {
-      if (oneRM > props.exercise.exerciseEstimatedMax) {
+      if (!props.exercise.isBodyWeight && oneRM > props.exercise.exerciseEstimatedMax) {
         return updateDoc(doc(db, "exercises", props.exerciseID), {
           exerciseEstimatedMax: oneRM.toFixed(1),
         });

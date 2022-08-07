@@ -29,7 +29,7 @@
           leave-to="-translate-x-full"
         >
           <div
-            class="relative flex flex-col flex-1 w-full max-w-xs bg-bg"
+            class="relative flex flex-col flex-1  w-full max-w-xs bg-bg"
           >
             <TransitionChild
               as="template"
@@ -332,7 +332,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col h-full">
+        <div class="flex flex-col h-fit bg-bg-600">
           <Transition
             enter-from-class="opacity-0"
             enter-active-class="transition-opacity duration-300 ease-in-out"

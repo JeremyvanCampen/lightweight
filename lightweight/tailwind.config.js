@@ -31,7 +31,8 @@ module.exports = {
           hover: "#02ae9e"
         },
         secondary: {
-          button: "#c38fff",
+          // button: "#c38fff",
+          button: "#02ae9e",
           textBody: "#000000",
           light: "#474747",
           DEFAULT: "#333333",

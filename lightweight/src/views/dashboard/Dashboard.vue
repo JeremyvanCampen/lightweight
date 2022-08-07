@@ -9,33 +9,37 @@
       <li
         v-for="(exercise, index) of filteredAndSorted"
         :key="exercise.id"
-        class="col-span-1 bg-bg rounded-lg shadow cursor-pointer hover:border-2 hover:border-buttonPrimary"
+        class="bg-bg rounded-lg cursor-pointer hover:border-2 hover:border-buttonPrimary flex flex-1 flex-col justify-between"
         @click="viewLogs(exercise.id)"
         :style="{ transitionDelay: 0.02 * index + 's' }"
       >
-        <div class="-mt-px flex">
-          <div class="w-0 flex-1 flex">
+        <div class="flex">
+          <span
+            class="relative -mr-px flex-1 inline-flex items-center justify-left pt-3 text-base text-primary-textTitle font-regular border border-transparent rounded-bl-lg"
+          >
+            <span class="ml-3">{{ exercise.exerciseName }}</span>
+          </span>
+        </div>
+
+        <div class="flex flex-1 flex-col justify-between">
+          <div class="flex-1 flex">
             <p
-              class="relative -mr-px w-0 flex-1 inline-flex items-center justify-left pt-6 text-base text-primary-textBody font-light border border-transparent rounded-bl-lg"
+              class="relative -mr-px flex-1 inline-flex items-center justify-left pb-1 text-2xl text-primary-textBody font-medium border border-transparent rounded-bl-lg"
             >
-              <span class="ml-3">{{ exercise.exerciseName }}</span>
+              <span v-if="exercise.exerciseEstimatedMax" class="ml-3">
+                1RM {{ exercise.exerciseEstimatedMax }} KG
+              </span>
+              <span v-else class="ml-3">No data yet</span>
             </p>
           </div>
         </div>
-        <div>
-          <div class="-mt-px flex">
-            <div class="w-0 flex-1 flex">
-              <p
-                class="relative -mr-px w-0 flex-1 inline-flex items-center justify-left pb-1 text-4xl text-primary-textBody font-regular border border-transparent rounded-bl-lg"
-              >
-                <span v-if="exercise.exerciseEstimatedMax" class="ml-3">
-                  1RM {{ exercise.exerciseEstimatedMax }} KG
-                </span>
-                <span v-else class="ml-3">No data yet</span>
-              </p>
-            </div>
-          </div>
-        </div>
+        <label v-if="exercise.isBodyWeight" class="text-right pr-2 pb-2">
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-buttonPrimary text-secondary-textBody"
+          >
+            BW
+          </span>
+        </label>
       </li>
     </TransitionGroup>
 

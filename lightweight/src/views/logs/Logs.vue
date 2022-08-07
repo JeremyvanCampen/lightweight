@@ -35,52 +35,44 @@
       <li
         v-for="(log, index) in filteredAndSorted"
         :key="log.id"
-        class="col-span-1 bg-bg rounded-lg shadow cursor-pointer hover:border-2 hover:border-buttonPrimary"
+        class="bg-bg rounded-lg cursor-pointer hover:border-2 hover:border-buttonPrimary flex flex-1 flex-col justify-between"
         :style="{ transitionDelay: 0.02 * index + 's' }"
       >
-        <div class="flex flex-col mt-4">
-          <div class="grid grid-cols-3 gap-4  pb-1">
-            <div class="col-span-1 text-center">
-              <label class="block text-sm font-light text-primary-textSub"
-                >Reps</label
-              >
-            </div>
-            <div class="col-span-1 text-center">
-              <label class="block text-sm font-light text-primary-textSub"
-                >Weight</label
-              >
-            </div>
-          </div>
-          <div
-            class="grid grid-cols-3 gap-4 "
-            v-for="(set, index) in log.sets"
-            :key="index"
+        <div class="flex">
+          <span
+            class="relative flex-1 text-left text-xl font-bold text-secondary-button pl-4 pt-2"
           >
-            <div class="col-span-1 self-center text-center">
-              <span class="truncate"> {{ set.reps }}</span>
-            </div>
-            <div class="col-span-1 self-center text-center">
-              <span class="truncate">{{ set.weight }} KG</span>
-            </div>
-          </div>
+            {{ log.sets.length }} sets
+          </span>
         </div>
-
-        <!-- <div class="grid grid-rows-4 grid-flow-col gap-4 w-full">
-            <template v-for="set in log.sets">
-              <span class="truncate"> {{ set.reps }}</span>
-              <span class="truncate">{{ set.weight }}</span>
-            </template>
-          </div> -->
-
-        <div>
-          <div class="flex">
-            <p
-              class="relative right-0 bottom-0 flex-1 text-right font-light text-primary-textBody font-regular border border-transparent rounded-bl-lg pr-4"
+        <div class="flex flex-1 flex-col justify-between">
+          <div class="flex flex-col mt-4 mb-4 mr-6 ml-6">
+            <div
+              class="grid grid-cols-2 gap-4"
+              v-for="(set, index) in log.sets"
+              :key="index"
             >
-              {{ log.createdDate }}
-            </p>
+              <div class="col-span-1 self-center text-left">
+                <span class="truncate">{{ set.reps }}</span>
+                <span class="truncate text-xs font-light"> reps</span>
+              </div>
+              <div class="col-span-1 self-center text-right" v-if="exercise.isBodyWeight">
+                <span class="truncate"  v-if="set.weight > 0">+ {{ set.weight }}</span>
+                <span class="truncate text-xs font-light" v-if="set.weight > 0"> KG</span>
+                 <span class="truncate text-xs font-light" v-else> BW</span>
+              </div>
+               <div class="col-span-1 self-center text-right" v-else>
+                <span class="truncate">{{ set.weight }}</span>
+                <span class="truncate text-xs font-light" > KG</span>
+              </div>
+            </div>
           </div>
         </div>
+        <label
+          class="text-right text-sm font-light text-primary-textTitle pr-4 pb-2"
+        >
+          {{ log.createdDate }}
+        </label>
       </li>
     </TransitionGroup>
 
