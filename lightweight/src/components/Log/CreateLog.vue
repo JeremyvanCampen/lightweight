@@ -149,8 +149,6 @@
                       <div class="col-span-5">
                         <input
                           type="number"
-                          name="description"
-                          id="description"
                           step=".01"
                           required
                           v-model="set.weight"
@@ -207,8 +205,6 @@
                     <div class="col-span-5">
                       <input
                         type="number"
-                        name="description"
-                        id="description"
                         v-model="formData.setToAdd.weight"
                         step=".01"
                         class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"

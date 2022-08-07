@@ -8,11 +8,14 @@
         <ChevronLeftIcon class="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
       </div>
 
-      <h2 class="my-8 self-center text-3xl font-light text-primary" v-if="exercise">
+      <h2
+        class="my-8 self-center text-3xl font-light text-primary truncate"
+        v-if="exercise"
+      >
         {{ exercise.exerciseName }}
       </h2>
     </div>
-        <div class="flex flex-row">
+    <!-- <div class="flex flex-row">
       <div
         class="ml-8 mr-8 bg-bg rounded-lg shadow w-full p-2"
       >
@@ -22,7 +25,7 @@
       </div>
       
       </div>
-    </div>
+    </div> -->
 
     <TransitionGroup
       name="list"
@@ -35,24 +38,47 @@
         class="col-span-1 bg-bg rounded-lg shadow cursor-pointer hover:border-2 hover:border-buttonPrimary"
         :style="{ transitionDelay: 0.02 * index + 's' }"
       >
-        <div class="-mt-px flex">
-          <div class="w-0 flex-1 flex">
-            <p
-              class="relative -mr-px w-0 flex-1 inline-flex items-center justify-left pt-6 text-base text-primary-textBody font-light border border-transparent rounded-bl-lg"
-            >
-              <span class="ml-3">Sets {{ log.sets.length }}</span>
-            </p>
+        <div class="flex flex-col mt-4">
+          <div class="grid grid-cols-3 gap-4  pb-1">
+            <div class="col-span-1 text-center">
+              <label class="block text-sm font-light text-primary-textSub"
+                >Reps</label
+              >
+            </div>
+            <div class="col-span-1 text-center">
+              <label class="block text-sm font-light text-primary-textSub"
+                >Weight</label
+              >
+            </div>
+          </div>
+          <div
+            class="grid grid-cols-3 gap-4 "
+            v-for="(set, index) in log.sets"
+            :key="index"
+          >
+            <div class="col-span-1 self-center text-center">
+              <span class="truncate"> {{ set.reps }}</span>
+            </div>
+            <div class="col-span-1 self-center text-center">
+              <span class="truncate">{{ set.weight }} KG</span>
+            </div>
           </div>
         </div>
+
+        <!-- <div class="grid grid-rows-4 grid-flow-col gap-4 w-full">
+            <template v-for="set in log.sets">
+              <span class="truncate"> {{ set.reps }}</span>
+              <span class="truncate">{{ set.weight }}</span>
+            </template>
+          </div> -->
+
         <div>
-          <div class="-mt-px flex">
-            <div class="w-0 flex-1 flex">
-              <p
-                class="relative -mr-px w-0 flex-1 inline-flex items-center justify-left pb-1 text-4xl text-primary-textBody font-regular border border-transparent rounded-bl-lg"
-              >
-                <span class="ml-3">{{ log.createdDate }}</span>
-              </p>
-            </div>
+          <div class="flex">
+            <p
+              class="relative right-0 bottom-0 flex-1 text-right font-light text-primary-textBody font-regular border border-transparent rounded-bl-lg pr-4"
+            >
+              {{ log.createdDate }}
+            </p>
           </div>
         </div>
       </li>
@@ -77,7 +103,12 @@
 </template>
 
 <script setup lang="ts">
-import { MailIcon, PhoneIcon, ChevronLeftIcon, ChevronDownIcon } from "@heroicons/vue/solid";
+import {
+  MailIcon,
+  PhoneIcon,
+  ChevronLeftIcon,
+  ChevronDownIcon,
+} from "@heroicons/vue/solid";
 import { PlusSmIcon as PlusSmIconSolid } from "@heroicons/vue/solid";
 import { PlusSmIcon as PlusSmIconOutline } from "@heroicons/vue/outline";
 import { TransitionRoot } from "@headlessui/vue";
@@ -94,8 +125,8 @@ import {
   onSnapshot,
   doc,
 } from "firebase/firestore";
- import Grid from 'gridjs-vue'
- import { useUiStateComposable } from "@/composables/uistate-composable";
+import Grid from "gridjs-vue";
+import { useUiStateComposable } from "@/composables/uistate-composable";
 
 const { globalState } = useUiStateComposable();
 

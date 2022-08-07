@@ -4,6 +4,7 @@ import Logs from '../views/logs/Logs.vue'
 // @ts-ignore
 import { getCurrentUser } from '../firebase/firebase.js';
 import Login from '../views/Login.vue';
+import Error404 from '../views/404.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -38,6 +39,12 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
+  },
+  {
+    path: '/:catchAll(.*)',
+    name: 'error404',
+    component: Error404,
+    meta: { requiresAuth: true },
   },
 ]
 
