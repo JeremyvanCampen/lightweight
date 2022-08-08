@@ -14,7 +14,8 @@
           :style="{ transitionDelay: 0.02 * index + 's' }"
       >
         <div class="flex mr-8">
-          <span class="relative -mr-px flex-1 inline-flex items-center justify-left pt-3 text-base text-primary-textTitle font-regular border border-transparent rounded-bl-lg "
+          <span
+              class="relative -mr-px flex-1 inline-flex items-center justify-left pt-3 text-base text-primary-textTitle font-regular border border-transparent rounded-bl-lg "
           >
             <span class="ml-3">{{ exercise.exerciseName }}</span>
           </span>
@@ -31,19 +32,13 @@
               aria-hidden="true"
           />
         </button>
-
-        <div class="flex flex-1 flex-col justify-between">
-          <div class="flex-1 flex">
-            <p
-                class="relative -mr-px flex-1 inline-flex items-center justify-left pb-1 text-2xl text-primary-textBody font-medium border border-transparent rounded-bl-lg"
-            >
-              <span v-if="exercise.exerciseEstimatedMax" class="ml-3">
-                1RM {{ exercise.exerciseEstimatedMax }} KG
+        <label class="ml-4 text-2xl text-primary-textBody font-medium pb-2 pt-2">
+              <span v-if="exercise.exerciseEstimatedMax" >
+                <span class="text-base text-primary"> 1RM </span> {{ exercise.exerciseEstimatedMax }} <span
+                  class="text-sm text-primary-textTitle">KG</span>
               </span>
-              <span v-else class="ml-3">No data yet</span>
-            </p>
-          </div>
-        </div>
+          <span v-else class="ml-3">No data yet</span>
+        </label>
         <label v-if="exercise.isBodyWeight" class="text-right pr-2 pb-2">
           <span
               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-buttonPrimary text-secondary-textBody"
@@ -175,58 +170,60 @@ function viewLogs(id) {
   });
 }
 
-  function deleteExercise(id:any) {
-    confirmModalData.value.loading = false;
-    activeDeleteUuid.value = id;
-    confirmModalData.value.open = true;
-  }
+function deleteExercise(id: any) {
+  confirmModalData.value.loading = false;
+  activeDeleteUuid.value = id;
+  confirmModalData.value.open = true;
+}
 
-  function onCancelDelete() {
-    confirmModalData.value.open = false;
-  }
+function onCancelDelete() {
+  confirmModalData.value.open = false;
+}
 
-  async function onConfirmDelete() {
-    confirmModalData.value.loading = true;
-    //First clear out all types nested in the component
-    const logsCollection = collection(
+async function onConfirmDelete() {
+  confirmModalData.value.loading = true;
+  //First clear out all types nested in the component
+  const logsCollection = collection(
+      db,
+      'exercises',
+      activeDeleteUuid.value,
+      'logs'
+  );
+
+  const logsArray: any[] = [];
+  const querySnapshot = await getDocs(logsCollection);
+  querySnapshot.forEach((doc: any) => {
+    logsArray.push(doc);
+  });
+
+  for (const log of logsArray) {
+    const typeRef = doc(
         db,
         'exercises',
         activeDeleteUuid.value,
-        'logs'
+        'logs',
+        log.id
     );
 
-    const logsArray: any[] = [];
-    const querySnapshot = await getDocs(logsCollection);
-    querySnapshot.forEach((doc: any) => {
-      logsArray.push(doc);
-    });
-
-    for (const log of logsArray) {
-      const typeRef = doc(
-          db,
-          'exercises',
-          activeDeleteUuid.value,
-          'logs',
-          log.id
-      );
-
-      deleteDoc(typeRef)
-          .then(() => {})
-          .catch((error: any) => {
-            console.log(error);
-          });
-    }
-
-    //delete the component
-    const exercisesRef = doc(db, 'exercises', activeDeleteUuid.value);
-
-    deleteDoc(exercisesRef)
-        .then(() => {})
-        .catch((error) => {
+    deleteDoc(typeRef)
+        .then(() => {
+        })
+        .catch((error: any) => {
           console.log(error);
         });
-    confirmModalData.value.open = false;
   }
+
+  //delete the component
+  const exercisesRef = doc(db, 'exercises', activeDeleteUuid.value);
+
+  deleteDoc(exercisesRef)
+      .then(() => {
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  confirmModalData.value.open = false;
+}
 </script>
 
 <style>

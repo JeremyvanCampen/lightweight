@@ -5,6 +5,10 @@ import Logs from '../views/logs/Logs.vue'
 import { getCurrentUser } from '../firebase/firebase.js';
 import Login from '../views/Login.vue';
 import Error404 from '../views/404.vue';
+// @ts-ignore
+import {useUiStateComposable} from '@/composables/uistate-composable';
+
+const {globalState} = useUiStateComposable();
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -54,6 +58,7 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
+  globalState.searchTerm = '';
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const user = await getCurrentUser();
 
