@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Dashboard from '../views/dashboard/Dashboard.vue';
+import Exercise from '../views/exercises/Exercises.vue';
 import Logs from '../views/logs/Logs.vue'
 // @ts-ignore
 import { getCurrentUser } from '../firebase/firebase.js';
@@ -13,13 +13,13 @@ const routes: Array<RouteRecordRaw> = [
     redirect: (to) => {
       // the function receives the target route as the argument
       // we return a redirect path/location here.
-      return { path: '/dashboard' };
+      return { path: '/exercises' };
     },
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: Dashboard,
+    path: '/exercises',
+    name: 'exercise',
+    component: Exercise,
     meta: {
       requiresAuth: true,
     },

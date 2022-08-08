@@ -2,15 +2,15 @@
   <div class="flex flex-col flex-1 w-full mx-auto bg-bg-600">
     <div class="flex flex-row">
       <div
-        class="ml-8 mr-4 my-8 bg-bg rounded-lg shadow w-min p-3"
-        @click="$router.go(-1)"
+          class="ml-8 mr-4 my-8 bg-bg rounded-lg shadow w-min p-3"
+          @click="$router.go(-1)"
       >
-        <ChevronLeftIcon class="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
+        <ChevronLeftIcon aria-hidden="true" class="w-6 h-6 sm:w-8 sm:h-8"/>
       </div>
 
       <h2
-        class="my-8 self-center text-3xl font-light text-primary truncate"
-        v-if="exercise"
+          v-if="exercise"
+          class="my-8 self-center text-3xl font-light text-primary truncate"
       >
         {{ exercise.exerciseName }}
       </h2>
@@ -28,19 +28,19 @@
     </div> -->
 
     <TransitionGroup
-      name="list"
-      tag="ul"
-      class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 m-8"
+        class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 m-8"
+        name="list"
+        tag="ul"
     >
       <li
-        v-for="(log, index) in filteredAndSorted"
-        :key="log.id"
-        class="bg-bg rounded-lg cursor-pointer hover:border-2 hover:border-buttonPrimary flex flex-1 flex-col justify-between"
-        :style="{ transitionDelay: 0.02 * index + 's' }"
+          v-for="(log, index) in filteredAndSorted"
+          :key="log.id"
+          :style="{ transitionDelay: 0.02 * index + 's' }"
+          class="bg-bg rounded-lg cursor-pointer hover:border-2 hover:border-buttonPrimary flex flex-1 flex-col justify-between"
       >
         <div class="flex">
           <span
-            class="relative flex-1 text-left text-xl font-bold text-secondary-button pl-4 pt-2"
+              class="relative flex-1 text-left text-xl font-bold text-secondary-button pl-4 pt-2"
           >
             {{ log.sets.length }} sets
           </span>
@@ -48,28 +48,28 @@
         <div class="flex flex-1 flex-col justify-between">
           <div class="flex flex-col mt-4 mb-4 mr-6 ml-6">
             <div
-              class="grid grid-cols-2 gap-4"
-              v-for="(set, index) in log.sets"
-              :key="index"
+                v-for="(set, index) in log.sets"
+                :key="index"
+                class="grid grid-cols-2 gap-4"
             >
               <div class="col-span-1 self-center text-left">
                 <span class="truncate">{{ set.reps }}</span>
                 <span class="truncate text-xs font-light"> reps</span>
               </div>
-              <div class="col-span-1 self-center text-right" v-if="exercise.isBodyWeight">
-                <span class="truncate"  v-if="set.weight > 0">+ {{ set.weight }}</span>
-                <span class="truncate text-xs font-light" v-if="set.weight > 0"> KG</span>
-                 <span class="truncate text-xs font-light" v-else> BW</span>
+              <div v-if="exercise.isBodyWeight" class="col-span-1 self-center text-right">
+                <span v-if="set.weight > 0" class="truncate">+ {{ set.weight }}</span>
+                <span v-if="set.weight > 0" class="truncate text-xs font-light"> KG</span>
+                <span v-else class="truncate text-xs font-light"> BW</span>
               </div>
-               <div class="col-span-1 self-center text-right" v-else>
+              <div v-else class="col-span-1 self-center text-right">
                 <span class="truncate">{{ set.weight }}</span>
-                <span class="truncate text-xs font-light" > KG</span>
+                <span class="truncate text-xs font-light"> KG</span>
               </div>
             </div>
           </div>
         </div>
         <label
-          class="text-right text-sm font-light text-primary-textTitle pr-4 pb-2"
+            class="text-right text-sm font-light text-primary-textTitle pr-4 pb-2"
         >
           {{ log.createdDate }}
         </label>
@@ -78,60 +78,52 @@
 
     <div class="fixed bottom-10 right-10">
       <button
-        v-on:click="openCreateLogModal()"
-        type="button"
-        class="p-6 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
+          class="p-6 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
+          type="button"
+          v-on:click="openCreateLogModal()"
       >
-        <PlusSmIconOutline class="h-6 w-6" aria-hidden="true" />
+        <PlusSmIconOutline aria-hidden="true" class="h-6 w-6"/>
       </button>
     </div>
     <CreateLog
-      :createLogModalOpen="isCreateLogModalOpen"
-      :exerciseID="route.params.exerciseID"
-      :exercise="exercise"
-      @closeCreateLogModal="closeCreateLogModal()"
+        :createLogModalOpen="isCreateLogModalOpen"
+        :exercise="exercise"
+        :exerciseID="route.params.exerciseID"
+        @closeCreateLogModal="closeCreateLogModal()"
     />
   </div>
 </template>
 
-<script setup lang="ts">
-import {
-  MailIcon,
-  PhoneIcon,
-  ChevronLeftIcon,
-  ChevronDownIcon,
-} from "@heroicons/vue/solid";
-import { PlusSmIcon as PlusSmIconSolid } from "@heroicons/vue/solid";
-import { PlusSmIcon as PlusSmIconOutline } from "@heroicons/vue/outline";
-import { TransitionRoot } from "@headlessui/vue";
+<script lang="ts" setup>
+import {ChevronLeftIcon,} from "@heroicons/vue/solid";
+import {PlusSmIcon as PlusSmIconOutline} from "@heroicons/vue/outline";
 import CreateLog from "@/components/Log/CreateLog.vue";
-import { getAuth, signOut } from "firebase/auth";
-import { onUnmounted, ref, computed } from "vue";
-import { db } from "@/firebase/firebase.js";
-import { useRouter, useRoute } from "vue-router";
-import {
-  collection,
-  query,
-  orderBy,
-  where,
-  onSnapshot,
-  doc,
-} from "firebase/firestore";
-import Grid from "gridjs-vue";
-import { useUiStateComposable } from "@/composables/uistate-composable";
+import {getAuth} from "firebase/auth";
+import {computed, onUnmounted, ref} from "vue";
+import {db} from "@/firebase/firebase.js";
+import {useRoute, useRouter} from "vue-router";
+import {collection, doc, onSnapshot, orderBy, query,} from "firebase/firestore";
+import {useUiStateComposable} from "@/composables/uistate-composable";
 
-const { globalState } = useUiStateComposable();
+const {globalState} = useUiStateComposable();
+
+const logs = ref([]);
+const isCreateLogModalOpen = ref(false);
+const user = ref();
+const router = useRouter();
+const route = useRoute();
+let exercise = getReactiveExercise();
 
 const filteredAndSorted = computed(() =>
-  Array.isArray(logs.value)
-    ? logs.value
-        .filter((log) => {
-          return log.createdDate
-            .toLowerCase()
-            .includes(globalState.searchTerm.toLowerCase());
-        })
-        .sort(compare)
-    : []
+    Array.isArray(logs.value)
+        ? logs.value
+            .filter((log) => {
+              return log.createdDate
+                  .toLowerCase()
+                  .includes(globalState.searchTerm.toLowerCase());
+            })
+            .sort(compare)
+        : []
 );
 
 function compare(a, b) {
@@ -139,13 +131,6 @@ function compare(a, b) {
   if (a.name > b.name) return 1;
   return 0;
 }
-
-const isCreateLogModalOpen = ref(false);
-const user = ref();
-const router = useRouter();
-const route = useRoute();
-var logs = ref([]);
-let exercise = getReactiveExercise();
 
 getAuth().onAuthStateChanged((u) => {
   user.value = u;
@@ -155,13 +140,13 @@ getAuth().onAuthStateChanged((u) => {
 function getReactiveExercise() {
   let exercise = ref({});
   const unsubscribe = onSnapshot(
-    doc(db, "exercises", route.params.exerciseID),
-    (doc) => {
-      exercise.value = {
-        id: doc.id,
-        ...doc.data(),
-      };
-    }
+      doc(db, "exercises", route.params.exerciseID),
+      (doc) => {
+        exercise.value = {
+          id: doc.id,
+          ...doc.data(),
+        };
+      }
   );
   onUnmounted(unsubscribe);
   return exercise;
@@ -169,10 +154,10 @@ function getReactiveExercise() {
 
 function getReactiveLogs() {
   const exercisesCollection = collection(
-    db,
-    "exercises",
-    route.params.exerciseID,
-    "logs"
+      db,
+      "exercises",
+      route.params.exerciseID,
+      "logs"
   );
   const q = query(exercisesCollection, orderBy("timeStampCreated", "desc"));
 
