@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/exercises',
-    name: 'exercise',
+    name: 'exercises',
     component: Exercise,
     meta: {
       requiresAuth: true,

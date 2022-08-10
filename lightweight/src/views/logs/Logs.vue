@@ -15,20 +15,38 @@
         {{ exercise.exerciseName }}
       </h2>
     </div>
-    <!-- <div class="flex flex-row">
+     <div class="flex flex-row ">
       <div
-        class="ml-8 mr-8 bg-bg rounded-lg shadow w-full p-2"
+        class="grid ml-8 mr-8 place-items-end  w-full p-2"
       >
       <div>
-          <ChevronDownIcon class="w-6 h-6 sm:w-8 sm:h-8" aria-hidden="true" />
-          <label>Date created</label>
+        <button
+            type="button"
+            @click="openEditExerciseModal"
+            class="w-6 h-6 sm:w-8 sm:h-8 ml-4"
+        >
+          <PencilIcon
+              class="w-6 h-6 text-buttonPrimary"
+              aria-hidden="true"
+          />
+        </button>
+        <button
+            type="button"
+            @click="deleteExercise(exercise.id)"
+            class="w-6 h-6 sm:w-8 sm:h-8 ml-4"
+        >
+          <TrashIcon
+              class="w-6 h-6 text-buttonPrimary"
+              aria-hidden="true"
+          />
+        </button>
       </div>
-      
+
       </div>
-    </div> -->
+    </div>
 
     <TransitionGroup
-        class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 m-8"
+        class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 m-8"
         name="list"
         tag="ul"
     >
@@ -56,7 +74,7 @@
                 <span class="truncate">{{ set.reps }}</span>
                 <span class="truncate text-xs font-light"> reps</span>
               </div>
-              <div v-if="exercise.isBodyWeight" class="col-span-1 self-center text-right">
+              <div v-if="exercise.isBodyWeight" class="col-span-1 self-center truncate text-right">
                 <span v-if="set.weight > 0" class="truncate">+ {{ set.weight }}</span>
                 <span v-if="set.weight > 0" class="truncate text-xs font-light"> KG</span>
                 <span v-else class="truncate text-xs font-light"> BW</span>
@@ -91,22 +109,52 @@
         :exerciseID="route.params.exerciseID"
         @closeCreateLogModal="closeCreateLogModal()"
     />
+    <ConfirmationModal
+        :open="confirmModalData.open"
+        :title="confirmModalData.title"
+        :body="confirmModalData.body"
+        :loading="confirmModalData.loading"
+        :cancelButtonText="confirmModalData.cancelButtonText"
+        :confirmButtonText="confirmModalData.confirmButtonText"
+        @cancel="onCancelDelete"
+        @confirm="onConfirmDelete"
+    />
+
+    <EditExercise
+        :editExerciseModalOpen="isEditExerciseModalOpen"
+        @closeEditExerciseModal="closeEditExerciseModal()"
+        :exercise="exercise"
+    />
+
   </div>
 </template>
 
 <script lang="ts" setup>
 import {ChevronLeftIcon,} from "@heroicons/vue/solid";
-import {PlusSmIcon as PlusSmIconOutline} from "@heroicons/vue/outline";
+import {PlusSmIcon as PlusSmIconOutline, PencilIcon, TrashIcon} from "@heroicons/vue/outline";
 import CreateLog from "@/components/Log/CreateLog.vue";
 import {getAuth} from "firebase/auth";
 import {computed, onUnmounted, ref} from "vue";
 import {db} from "@/firebase/firebase.js";
 import {useRoute, useRouter} from "vue-router";
-import {collection, doc, onSnapshot, orderBy, query,} from "firebase/firestore";
+import {collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query,} from "firebase/firestore";
 import {useUiStateComposable} from "@/composables/uistate-composable";
+import ConfirmationModal from '@/components/ConfirmationModal'
+import EditExercise from "@/components/Exercise/EditExercise.vue";
 
 const {globalState} = useUiStateComposable();
 
+const confirmModalData = ref({
+  open: false,
+  title: 'Delete exercise',
+  body: 'Are you sure you want to delete this project? All data from this project and the underlying data will be permanently deleted from our servers. This action cannot be undone.',
+  cancelButtonText: 'Cancel',
+  confirmButtonText: 'Confirm',
+  loading: false,
+});
+const activeDeleteUuid = ref();
+
+const isEditExerciseModalOpen = ref(false);
 const logs = ref([]);
 const isCreateLogModalOpen = ref(false);
 const user = ref();
@@ -181,6 +229,73 @@ function openCreateLogModal() {
 
 function closeCreateLogModal() {
   isCreateLogModalOpen.value = false;
+}
+
+function deleteExercise(id: any) {
+  confirmModalData.value.loading = false;
+  activeDeleteUuid.value = id;
+  confirmModalData.value.open = true;
+}
+
+function onCancelDelete() {
+  confirmModalData.value.open = false;
+}
+
+async function onConfirmDelete() {
+  confirmModalData.value.loading = true;
+  //First clear out all types nested in the component
+  const logsCollection = collection(
+      db,
+      'exercises',
+      activeDeleteUuid.value,
+      'logs'
+  );
+
+  const logsArray: any[] = [];
+  const querySnapshot = await getDocs(logsCollection);
+  querySnapshot.forEach((doc: any) => {
+    logsArray.push(doc);
+  });
+
+  for (const log of logsArray) {
+    const typeRef = doc(
+        db,
+        'exercises',
+        activeDeleteUuid.value,
+        'logs',
+        log.id
+    );
+
+    deleteDoc(typeRef)
+        .then(() => {
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+  }
+
+  //delete the component
+  const exercisesRef = doc(db, 'exercises', activeDeleteUuid.value);
+
+  deleteDoc(exercisesRef)
+      .then(() => {
+        router.push({name: "exercises"})
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .finally(() =>
+      {
+        confirmModalData.value.open = false;
+      })
+}
+
+function openEditExerciseModal() {
+  isEditExerciseModalOpen.value = true;
+}
+
+function closeEditExerciseModal() {
+  isEditExerciseModalOpen.value = false;
 }
 </script>
 

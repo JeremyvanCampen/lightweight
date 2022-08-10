@@ -4,7 +4,7 @@
     <TransitionGroup
         name="list"
         tag="ul"
-        class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8 m-8"
+        class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 m-8"
     >
       <li
           v-for="(exercise, index) of filteredAndSorted"
@@ -22,30 +22,29 @@
 
 
         </div>
-        <button
-            type="button"
-            v-on:click.stop @click="deleteExercise(exercise.id)"
-            class="absolute right-1 top-2"
-        >
-          <XIcon
-              class="w-6 h-6 text-buttonPrimary"
-              aria-hidden="true"
-          />
-        </button>
         <label class="ml-4 text-2xl text-primary-textBody font-medium pb-2 pt-2">
-              <span v-if="exercise.exerciseEstimatedMax" >
+              <span v-if="exercise.exerciseEstimatedMax">
                 <span class="text-base text-primary"> 1RM </span> {{ exercise.exerciseEstimatedMax }} <span
                   class="text-sm text-primary-textTitle">KG</span>
               </span>
-          <span v-else class="ml-3">No data yet</span>
+
         </label>
-        <label v-if="exercise.isBodyWeight" class="text-right pr-2 pb-2">
+        <div class="grid grid-cols-3">
+          <div v-if="exercise.isBodyWeight" class="text-left ml-4 col-span-2">
+        <span v-if="exercise.exerciseHighestReps">
+                  <span class="text-base text-primary"> HR </span> {{ exercise.exerciseHighestReps }} <span
+            class="text-sm text-primary-textTitle">reps</span>
+                </span>
+          </div>
+          <div v-if="exercise.isBodyWeight" class="text-right pr-2 pb-2">
           <span
               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-buttonPrimary text-secondary-textBody"
           >
             BW
           </span>
-        </label>
+          </div>
+        </div>
+
       </li>
     </TransitionGroup>
 
@@ -63,22 +62,12 @@
         @closeCreateExerciseModal="closeCreateExerciseModal()"
     />
 
-    <ConfirmationModal
-        :open="confirmModalData.open"
-        :title="confirmModalData.title"
-        :body="confirmModalData.body"
-        :loading="confirmModalData.loading"
-        :cancelButtonText="confirmModalData.cancelButtonText"
-        :confirmButtonText="confirmModalData.confirmButtonText"
-        @cancel="onCancelDelete"
-        @confirm="onConfirmDelete"
-    />
 
   </div>
 </template>
 
 <script setup lang="ts">
-import {PlusSmIcon as PlusSmIconOutline, XIcon} from "@heroicons/vue/outline";
+import {PlusSmIcon as PlusSmIconOutline} from "@heroicons/vue/outline";
 import CreateExercise from "@/components/Exercise/CreateExercise.vue";
 import {getAuth} from "firebase/auth";
 import {onUnmounted, ref, computed} from "vue";
@@ -89,22 +78,11 @@ import {
   query,
   orderBy,
   where,
-  onSnapshot, deleteDoc, doc, getDocs,
+  onSnapshot
 } from "firebase/firestore";
 import {useUiStateComposable} from '@/composables/uistate-composable';
-import ConfirmationModal from '@/components/ConfirmationModal'
-
-const confirmModalData = ref({
-  open: false,
-  title: 'Delete exercise',
-  body: 'Are you sure you want to delete this project? All data from this project and the underlying data will be permanently deleted from our servers. This action cannot be undone.',
-  cancelButtonText: 'Cancel',
-  confirmButtonText: 'Confirm',
-  loading: false,
-});
 
 const {globalState} = useUiStateComposable();
-const activeDeleteUuid = ref();
 const isExerciseModalOpen = ref(false);
 const user = ref();
 const router = useRouter();
@@ -148,11 +126,6 @@ function getReactiveExercises() {
   onUnmounted(unsubscribe);
 }
 
-function removeTraining(index) {
-  console.log(index);
-  people.value.splice(index, 1);
-}
-
 function openCreateExerciseModal() {
   isExerciseModalOpen.value = true;
 }
@@ -170,60 +143,7 @@ function viewLogs(id) {
   });
 }
 
-function deleteExercise(id: any) {
-  confirmModalData.value.loading = false;
-  activeDeleteUuid.value = id;
-  confirmModalData.value.open = true;
-}
 
-function onCancelDelete() {
-  confirmModalData.value.open = false;
-}
-
-async function onConfirmDelete() {
-  confirmModalData.value.loading = true;
-  //First clear out all types nested in the component
-  const logsCollection = collection(
-      db,
-      'exercises',
-      activeDeleteUuid.value,
-      'logs'
-  );
-
-  const logsArray: any[] = [];
-  const querySnapshot = await getDocs(logsCollection);
-  querySnapshot.forEach((doc: any) => {
-    logsArray.push(doc);
-  });
-
-  for (const log of logsArray) {
-    const typeRef = doc(
-        db,
-        'exercises',
-        activeDeleteUuid.value,
-        'logs',
-        log.id
-    );
-
-    deleteDoc(typeRef)
-        .then(() => {
-        })
-        .catch((error: any) => {
-          console.log(error);
-        });
-  }
-
-  //delete the component
-  const exercisesRef = doc(db, 'exercises', activeDeleteUuid.value);
-
-  deleteDoc(exercisesRef)
-      .then(() => {
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  confirmModalData.value.open = false;
-}
 </script>
 
 <style>

@@ -280,6 +280,7 @@ async function saveExercise() {
   addDoc(exercisesCollection, {
     exerciseName: formData.value.exerciseName,
     exerciseEstimatedMax: "",
+    exerciseHighestReps: "",
     createdByName: user.value.email,
     createdByUid: user.value.uid,
     createdDate: moment().format("DD-MM-YYYY HH:mm"),

@@ -260,25 +260,12 @@
 </template>
 <script setup lang="ts">
 import {ref} from "vue";
-import {
-  Dialog,
-  DialogOverlay,
-  TransitionChild,
-  TransitionRoot,
-} from "@headlessui/vue";
-import {
-  PlusSmIcon as PlusSmIconOutline,
-  MinusSmIcon as MinusSmIconOutline,
-} from "@heroicons/vue/outline";
+import {Dialog, DialogOverlay, TransitionChild, TransitionRoot,} from "@headlessui/vue";
+import {MinusSmIcon as MinusSmIconOutline, PlusSmIcon as PlusSmIconOutline,} from "@heroicons/vue/outline";
 
 import Button from "../../components/Button.vue";
 import {db} from "@/firebase/firebase.js";
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  doc,
-} from "firebase/firestore";
+import {addDoc, collection, doc, updateDoc,} from "firebase/firestore";
 
 import moment from "moment";
 import {getAuth} from "firebase/auth";
@@ -349,7 +336,18 @@ async function saveExercise() {
         oneRM = oneRMCalculated;
       }
     }
+  } else {
+    console.log('in else')
+    var hR = 0;
+    for (var set of formData.value.sets) {
+      if (set.reps > hR) {
+        console.log(set.reps)
+        hR = set.reps;
+      }
+    }
   }
+
+  console.log(hR)
 
   addDoc(logsCollection, {
     sets: formData.value.sets,
@@ -359,13 +357,24 @@ async function saveExercise() {
     timeStampCreated: new Date(),
   })
       .then((result) => {
-        if (!props.exercise.isBodyWeight && oneRM > props.exercise.exerciseEstimatedMax) {
+        console.log(hR, props.exercise.exerciseHighestReps, props.exercise.isBodyWeight)
+        console.log(hR > props.exercise.exerciseHighestReps)
+        if ((!props.exercise.isBodyWeight && oneRM > props.exercise.exerciseEstimatedMax) || props.exercise.exerciseEstimatedMax == undefined) {
           const oldOneRM: number = props.exercise.exerciseEstimatedMax;
           updateDoc(doc(db, "exercises", props.exerciseID), {
             exerciseEstimatedMax: oneRM.toFixed(1),
           })
               .then((result) => {
                 toaster.show(`New record! 1RM ${oneRM.toFixed(1)} KG `);
+                closeCreateLogModal();
+              })
+        } else if ((props.exercise.isBodyWeight && hR > props.exercise.exerciseHighestReps) || props.exercise.exerciseHighestReps == undefined) {
+
+          updateDoc(doc(db, "exercises", props.exerciseID), {
+            exerciseHighestReps: hR,
+          })
+              .then((result) => {
+                toaster.show(`New record! HR is now ${hR}`);
                 closeCreateLogModal();
               })
         } else {
