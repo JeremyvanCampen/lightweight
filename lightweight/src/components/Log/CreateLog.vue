@@ -53,7 +53,7 @@
                   >
                     {{ exercise.exerciseName }}
                   </label>
-                  <div class="space-y-6 sm:p-6">
+                  <div v-if="!exercise.isTime" class="space-y-6 sm:p-6">
                     <div v-if="formError" class="p-4 rounded-md bg-red-50">
                       <div class="flex">
                         <div class="flex-shrink-0">
@@ -169,8 +169,99 @@
                       </div>
                     </div>
                   </div>
+                  <div v-else class="space-y-6 sm:p-6">
+                    <div v-if="formError" class="p-4 rounded-md bg-red-50">
+                      <div class="flex">
+                        <div class="flex-shrink-0">
+                          <svg
+                              class="w-5 h-5 text-red-400"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              aria-hidden="true"
+                          >
+                            <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                        <div class="ml-3">
+                          <h3 class="mb-0 text-sm font-light text-red-800">
+                            {{ formError }}
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                    <h6
+                        class="text-primary-textBody font-medium pt-4"
+                        v-if="formData.sets.length > 0"
+                    >
+                      All sets
+                    </h6>
+                    <!-- sets headers -->
+                    <div
+                        class="grid grid-cols-12 gap-4"
+                        v-if="formData.sets.length > 0"
+                    >
+                      <div class="col-span-1"></div>
+                      <div class="col-span-2 text-center">
+                        <label
+                            class="block text-sm font-light text-primary-textSub"
+                        >Set</label
+                        >
+                      </div>
+                      <div class="col-span-4">
+                        <label
+                            class="block text-sm font-light text-primary-textSub"
+                        >Time in seconds</label
+                        >
+                      </div>
+                    </div>
+                    <!-- Toegevoegde componenten met een match (addedComponents) -->
+                    <div
+                        class="grid grid-cols-12 gap-4"
+                        v-for="(set, index) in formData.sets"
+                        :key="index"
+                        :value="set"
+                    >
+                      <div class="relative col-span-1">
+                        <button
+                            type="button"
+                            class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
+                            @click="removeAddedSet(index, false)"
+                        >
+                          <MinusSmIconOutline
+                              class="h-6 w-6"
+                              aria-hidden="true"
+                          />
+                        </button>
+                      </div>
+                      <div class="col-span-2 self-center text-center">
+                        <label class="text-sm font-light text-primary-textSub">
+                          {{ index + 1 }}
+                        </label>
+                      </div>
+                      <div class="col-span-4">
+                        <input
+                            type="number"
+                            required
+                            v-model="set.time"
+                            class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm required"
+                            :class="
+                            formError
+                              ? 'text-red-900 placeholder-red-300 border-red-300 focus:ring-red-500 focus:border-red-500'
+                              : 'placeholder-gray-400 border-gray-300 focus:ring-primary focus:border-primary'
+                          "
+                            :aria-invalid="formError"
+                            aria-describedby="description-error"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="space-y-6 sm:p-6 py-4">
+                <div v-if="!exercise.isTime" class="space-y-6 sm:p-6 py-4">
                   <!-- Functionaliteit voor het toevoegen van een nieuw component -->
                   <!-- componenten headers -->
                   <h3 class="text-primary-textTitle font-light">New Set</h3>
@@ -231,6 +322,44 @@
                               !formData.setToAdd.weight > 0
                             : !formData.setToAdd.reps > 0
                         "
+                      >
+                        <PlusSmIconOutline class="h-6 w-6" aria-hidden="true"/>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div v-else class="space-y-6 sm:p-6 py-4">
+                  <!-- Functionaliteit voor het toevoegen van een nieuw component -->
+                  <!-- componenten headers -->
+                  <h3 class="text-primary-textTitle font-light">New Set</h3>
+                  <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-4">
+                      <label
+                          class="block text-sm font-light text-primary-textSub"
+                      >Time in seconds</label
+                      >
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-4">
+                      <input
+                          type="number"
+                          v-model="formData.setToAdd.time"
+                          class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                          :class="
+                          formError
+                            ? 'text-red-900 placeholder-red-300 border-red-300 focus:ring-red-500 focus:border-red-500'
+                            : 'placeholder-gray-400 border-gray-300 focus:ring-primary focus:border-primary'
+                        "
+                      />
+                    </div>
+                    <div class="relative col-span-2">
+                      <button
+                          @click="addNewSet()"
+                          type="button"
+                          class="absolute top-1/2 left-1/2 p-2 disabled:bg-primary transform -translate-x-1/2 -translate-y-1/2 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
+                          :disabled="!formData.setToAdd.time > 0"
                       >
                         <PlusSmIconOutline class="h-6 w-6" aria-hidden="true"/>
                       </button>
@@ -306,6 +435,7 @@ const formData = ref({
   setToAdd: {
     reps: "",
     weight: "",
+    time: ""
   },
 });
 
@@ -326,7 +456,7 @@ async function submit() {
 async function saveExercise() {
   const logsCollection = collection(db, "exercises", props.exerciseID, "logs");
 
-  if (!props.exercise.isBodyWeight) {
+  if (!props.exercise.isBodyWeight && !props.exercise.isTime) {
     var oneRM = 0;
 
     for (var set of formData.value.sets) {
@@ -336,19 +466,23 @@ async function saveExercise() {
         oneRM = oneRMCalculated;
       }
     }
-  } else {
-    console.log('in else')
+  } else if(props.exercise.isBodyWeight) {
     var hR = 0;
     for (var set of formData.value.sets) {
       if (set.reps > hR) {
-        console.log(set.reps)
         hR = set.reps;
       }
     }
   }
-
-  console.log(hR)
-
+  else if(props.exercise.isTime)
+  {
+    var hT = 0;
+    for (var set of formData.value.sets) {
+      if (set.time > hT) {
+        hT = set.time;
+      }
+    }
+  }
   addDoc(logsCollection, {
     sets: formData.value.sets,
     createdByName: user.value.email,
@@ -357,9 +491,7 @@ async function saveExercise() {
     timeStampCreated: new Date(),
   })
       .then((result) => {
-        console.log(hR, props.exercise.exerciseHighestReps, props.exercise.isBodyWeight)
-        console.log(hR > props.exercise.exerciseHighestReps)
-        if ((!props.exercise.isBodyWeight && oneRM > props.exercise.exerciseEstimatedMax) || props.exercise.exerciseEstimatedMax == undefined) {
+        if ((!props.exercise.isBodyWeight && !props.exercise.isTime && oneRM > props.exercise.exerciseEstimatedMax) || (!props.exercise.isBodyWeight && !props.exercise.isTime && props.exercise.exerciseEstimatedMax == undefined)) {
           const oldOneRM: number = props.exercise.exerciseEstimatedMax;
           updateDoc(doc(db, "exercises", props.exerciseID), {
             exerciseEstimatedMax: oneRM.toFixed(1),
@@ -368,7 +500,7 @@ async function saveExercise() {
                 toaster.show(`New record! 1RM ${oneRM.toFixed(1)} KG `);
                 closeCreateLogModal();
               })
-        } else if ((props.exercise.isBodyWeight && hR > props.exercise.exerciseHighestReps) || props.exercise.exerciseHighestReps == undefined) {
+        } else if ((props.exercise.isBodyWeight && hR > props.exercise.exerciseHighestReps) || (props.exercise.isBodyWeight && props.exercise.exerciseHighestReps == undefined)) {
 
           updateDoc(doc(db, "exercises", props.exerciseID), {
             exerciseHighestReps: hR,
@@ -377,7 +509,18 @@ async function saveExercise() {
                 toaster.show(`New record! HR is now ${hR}`);
                 closeCreateLogModal();
               })
-        } else {
+        }
+        else if((props.exercise.isTime && hT > props.exercise.exerciseHighestTime) || (props.exercise.isTime && props.exercise.exerciseHighestTime == undefined))
+        {
+          updateDoc(doc(db, "exercises", props.exerciseID), {
+            exerciseHighestTime: hT,
+          })
+              .then((result) => {
+                toaster.show(`New record! HT is now ${hT} seconds`);
+                closeCreateLogModal();
+              })
+        }
+        else {
           closeCreateLogModal();
         }
       })
@@ -401,16 +544,30 @@ async function saveExercise() {
 }
 
 function addNewSet() {
-  if (formData.value.setToAdd.weight % 1 != 0) {
-    formData.value.setToAdd.weight = parseFloat(
-        formData.value.setToAdd.weight
-    ).toFixed(2);
-  }
+  let newSet;
 
-  let newSet = {
-    reps: formData.value.setToAdd.reps,
-    weight: formData.value.setToAdd.weight,
-  };
+  if (props.exercise.isTime) {
+    if (formData.value.setToAdd.time % 1 != 0) {
+      formData.value.setToAdd.time = Math.round(
+
+          formData.value.setToAdd.time
+      );
+    }
+    newSet = {
+      time: formData.value.setToAdd.time,
+    }
+  } else {
+    if (formData.value.setToAdd.weight % 1 != 0) {
+      formData.value.setToAdd.weight = parseFloat(
+          formData.value.setToAdd.weight
+      ).toFixed(2);
+    }
+
+    newSet = {
+      reps: formData.value.setToAdd.reps,
+      weight: formData.value.setToAdd.weight,
+    };
+  }
   formData.value.sets.push(newSet);
 }
 

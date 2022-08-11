@@ -2,16 +2,16 @@
   <div class="flex flex-col flex-1 w-full mx-auto bg-bg-600">
     <h2 class="m-8 text-3xl font-light text-primary">Exercises</h2>
     <TransitionGroup
+        class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 m-8"
         name="list"
         tag="ul"
-        class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 m-8"
     >
       <li
           v-for="(exercise, index) of filteredAndSorted"
           :key="exercise.id"
+          :style="{ transitionDelay: 0.02 * index + 's' }"
           class="relative bg-bg rounded-lg cursor-pointer hover:border-2 hover:border-buttonPrimary flex flex-1 flex-col justify-between"
           @click="viewLogs(exercise.id)"
-          :style="{ transitionDelay: 0.02 * index + 's' }"
       >
         <div class="flex mr-8">
           <span
@@ -29,18 +29,35 @@
               </span>
 
         </label>
-        <div class="grid grid-cols-3">
-          <div v-if="exercise.isBodyWeight" class="text-left ml-4 col-span-2">
+        <div v-if="exercise.isBodyWeight" class="grid grid-cols-3">
+          <div class="text-left ml-4 col-span-2">
         <span v-if="exercise.exerciseHighestReps">
-                  <span class="text-base text-primary"> HR </span> {{ exercise.exerciseHighestReps }} <span
-            class="text-sm text-primary-textTitle">reps</span>
-                </span>
+                  <span class="text-base text-primary"> HR </span> {{ exercise.exerciseHighestReps }}
+                    <span
+                        class="text-sm text-primary-textTitle">reps</span>
+                          </span>
           </div>
-          <div v-if="exercise.isBodyWeight" class="text-right pr-2 pb-2">
+          <div  class="text-right pr-2 pb-2">
           <span
               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-buttonPrimary text-secondary-textBody"
           >
             BW
+          </span>
+          </div>
+        </div>
+        <div v-if="exercise.isTime" class="grid grid-cols-3">
+          <div class="text-left ml-4 col-span-2">
+        <span v-if="exercise.exerciseHighestTime">
+                  <span class="text-base text-primary"> HT </span> {{ exercise.exerciseHighestTime }}
+                    <span
+                        class="text-sm text-primary-textTitle">sec</span>
+                          </span>
+          </div>
+          <div  class="text-right pr-2 pb-2">
+          <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-buttonPrimary text-secondary-textBody"
+          >
+            Time
           </span>
           </div>
         </div>
@@ -50,11 +67,11 @@
 
     <div class="fixed bottom-10 right-10">
       <button
-          v-on:click="openCreateExerciseModal()"
-          type="button"
           class="p-6 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
+          type="button"
+          v-on:click="openCreateExerciseModal()"
       >
-        <PlusSmIconOutline class="h-6 w-6" aria-hidden="true"/>
+        <PlusSmIconOutline aria-hidden="true" class="h-6 w-6"/>
       </button>
     </div>
     <CreateExercise
@@ -66,20 +83,14 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {PlusSmIcon as PlusSmIconOutline} from "@heroicons/vue/outline";
 import CreateExercise from "@/components/Exercise/CreateExercise.vue";
 import {getAuth} from "firebase/auth";
-import {onUnmounted, ref, computed} from "vue";
+import {computed, onUnmounted, ref} from "vue";
 import {db} from "@/firebase/firebase.js";
 import {useRouter} from "vue-router";
-import {
-  collection,
-  query,
-  orderBy,
-  where,
-  onSnapshot
-} from "firebase/firestore";
+import {collection, onSnapshot, orderBy, query, where} from "firebase/firestore";
 import {useUiStateComposable} from '@/composables/uistate-composable';
 
 const {globalState} = useUiStateComposable();
