@@ -438,7 +438,7 @@ import {MinusSmIcon as MinusSmIconOutline, PlusSmIcon as PlusSmIconOutline,} fro
 
 import Button from "../../components/Button.vue";
 import {db} from "@/firebase/firebase.js";
-import {addDoc, collection, doc, updateDoc,} from "firebase/firestore";
+import {addDoc, collection, doc, updateDoc, arrayUnion} from "firebase/firestore";
 
 import moment from "moment";
 import {getAuth} from "firebase/auth";
@@ -538,7 +538,8 @@ async function saveExercise() {
         if ((!props.exercise.isBodyWeight && !props.exercise.isTime && oneRM > props.exercise.exerciseEstimatedMax) || (!props.exercise.isBodyWeight && !props.exercise.isTime && props.exercise.exerciseEstimatedMax == undefined)) {
           const oldOneRM: number = props.exercise.exerciseEstimatedMax;
           updateDoc(doc(db, "exercises", props.exerciseID), {
-            exerciseEstimatedMax: oneRM.toFixed(1),
+            exerciseEstimatedMax: arrayUnion(oneRM.toFixed(1)),
+            exerciseEstimatedMaxDate: arrayUnion(moment().format("DD-MM-YYYY HH:mm")),
           })
               .then((result) => {
                 toaster.show(`New record! 1RM ${oneRM.toFixed(1)} KG `);

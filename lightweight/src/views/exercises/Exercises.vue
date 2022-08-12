@@ -19,48 +19,56 @@
           >
             <span class="ml-3">{{ exercise.exerciseName }}</span>
           </span>
-
-
         </div>
-        <label class="ml-4 text-2xl text-primary-textBody font-medium pb-2 pt-2">
+        <label v-if="exercise.isWeight" class="ml-4 text-2xl text-primary-textBody font-medium pb-2 pt-2">
               <span v-if="exercise.exerciseEstimatedMax">
-                <span class="text-base text-primary"> 1RM </span> {{ exercise.exerciseEstimatedMax }} <span
+                <span class="text-base text-primary"> 1RM </span> {{ exercise.exerciseEstimatedMax[exercise.exerciseEstimatedMax.length -1] }} <span
                   class="text-sm text-primary-textTitle">KG</span>
+              </span>
+        </label>
+        <div class="w-full" v-if="exercise.isWeight">
+          <LineChart :chartData="{
+  labels: exercise.exerciseEstimatedMaxDate,
+  datasets: [{
+    data: exercise.exerciseEstimatedMax,
+    fill: true,
+    borderColor: 'rgb(75, 192, 192)',
+    borderWidth: 3,
+    tension: 0.1,
+    pointStyle: 'line'
+  }]
+}" :options="testData.options" class="ml-1 mr-1"/>
+        </div>
+        <label v-if="exercise.isBodyWeight" class="ml-4 text-2xl text-primary-textBody font-medium pb-2 pt-2">
+              <span v-if="exercise.exerciseHighestReps">
+                <span class="text-base text-primary"> HR </span> {{ exercise.exerciseHighestReps }} <span
+                  class="text-sm text-primary-textTitle">reps</span>
               </span>
 
         </label>
-        <div v-if="exercise.isBodyWeight" class="grid grid-cols-3">
-          <div class="text-left ml-4 col-span-2">
-        <span v-if="exercise.exerciseHighestReps">
-                  <span class="text-base text-primary"> HR </span> {{ exercise.exerciseHighestReps }}
-                    <span
-                        class="text-sm text-primary-textTitle">reps</span>
-                          </span>
-          </div>
-          <div  class="text-right pr-2 pb-2">
+        <label v-if="exercise.isTime" class="ml-4 text-2xl text-primary-textBody font-medium pb-2 pt-2">
+              <span v-if="exercise.exerciseHighestTime">
+                <span class="text-base text-primary"> HT </span> {{ exercise.exerciseHighestTime }} <span
+                  class="text-sm text-primary-textTitle">sec</span>
+              </span>
+        </label>
+        <div class="text-right pr-2 pb-2">
           <span
               class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-buttonPrimary text-secondary-textBody"
           >
-            BW
+            <span v-if="exercise.isWeight">
+             <svg class="h-5 w-5" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path
+                 d="M104 96h-48C42.75 96 32 106.8 32 120V224C14.33 224 0 238.3 0 256c0 17.67 14.33 32 31.1 32L32 392C32 405.3 42.75 416 56 416h48C117.3 416 128 405.3 128 392v-272C128 106.8 117.3 96 104 96zM456 32h-48C394.8 32 384 42.75 384 56V224H256V56C256 42.75 245.3 32 232 32h-48C170.8 32 160 42.75 160 56v400C160 469.3 170.8 480 184 480h48C245.3 480 256 469.3 256 456V288h128v168c0 13.25 10.75 24 24 24h48c13.25 0 24-10.75 24-24V56C480 42.75 469.3 32 456 32zM608 224V120C608 106.8 597.3 96 584 96h-48C522.8 96 512 106.8 512 120v272c0 13.25 10.75 24 24 24h48c13.25 0 24-10.75 24-24V288c17.67 0 32-14.33 32-32C640 238.3 625.7 224 608 224z"/></svg>
+            </span>
+           <span v-if="exercise.isBodyWeight">
+              BW
+            </span>
+           <span v-if="exercise.isTime">
+              <ClockIcon aria-hidden="true" class="h-5 w-5"/>
+            </span>
           </span>
-          </div>
         </div>
-        <div v-if="exercise.isTime" class="grid grid-cols-3">
-          <div class="text-left ml-4 col-span-2">
-        <span v-if="exercise.exerciseHighestTime">
-                  <span class="text-base text-primary"> HT </span> {{ exercise.exerciseHighestTime }}
-                    <span
-                        class="text-sm text-primary-textTitle">sec</span>
-                          </span>
-          </div>
-          <div  class="text-right mr-2 mb-2">
-          <span
-              class="px-1.5 py-0.5 rounded-full text-sm font-medium bg-buttonPrimary text-secondary-textBody"
-          >
-            Time
-          </span>
-          </div>
-        </div>
+
 
       </li>
     </TransitionGroup>
@@ -84,7 +92,7 @@
 </template>
 
 <script lang="ts" setup>
-import {PlusSmIcon as PlusSmIconOutline} from "@heroicons/vue/outline";
+import {ClockIcon, PlusSmIcon as PlusSmIconOutline} from "@heroicons/vue/outline";
 import CreateExercise from "@/components/Exercise/CreateExercise.vue";
 import {getAuth} from "firebase/auth";
 import {computed, onUnmounted, ref} from "vue";
@@ -92,22 +100,77 @@ import {db} from "@/firebase/firebase.js";
 import {useRouter} from "vue-router";
 import {collection, onSnapshot, orderBy, query, where} from "firebase/firestore";
 import {useUiStateComposable} from '@/composables/uistate-composable';
+import {LineChart} from 'vue-chart-3';
+import {Chart, registerables} from "chart.js";
+
+Chart.register(...registerables);
 
 const {globalState} = useUiStateComposable();
 const isExerciseModalOpen = ref(false);
 const user = ref();
 const router = useRouter();
 const exercises = ref([]);
-const filteredAndSorted = computed(() =>
-    Array.isArray(exercises.value)
-        ? exercises.value
+
+const testData = {
+  labels: ['60', '95', '120', '125', '150'],
+  datasets: [{
+    data: [60, 95, 120, 125, 150],
+    fill: true,
+    borderColor: 'rgb(75, 192, 192)',
+    borderWidth: 3,
+    tension: 0.1,
+    pointStyle: 'line'
+  }],
+  options: {
+    plugins: {
+      legend: {
+        display: false
+      }
+    },
+    scales: {
+      y: {
+        display: false // Hide Y axis labels
+      },
+      x: {
+        display: true // Hide X axis labels
+      }
+    }
+  }
+};
+
+
+const filteredAndSorted = computed(() => {
+      if (globalState.searchTerm.toLowerCase() === 'bodyweight' || globalState.searchTerm.toLowerCase() === 'bw') {
+        return exercises.value
             .filter((exercise) => {
-              return exercise.exerciseName
-                  .toLowerCase()
-                  .includes(globalState.searchTerm.toLowerCase());
+              return exercise.isBodyWeight
             })
             .sort(compare)
-        : []
+      } else if (globalState.searchTerm.toLowerCase() === 'weight') {
+        return exercises.value
+            .filter((exercise) => {
+              return exercise.isWeight
+            })
+            .sort(compare)
+      } else if (globalState.searchTerm.toLowerCase() === 'time') {
+        return exercises.value
+            .filter((exercise) => {
+              return exercise.isTime
+            })
+            .sort(compare)
+      } else {
+        return exercises.value
+            .filter((exercise) => {
+              return exercise.exerciseName
+                      .toLowerCase()
+                      .includes(globalState.searchTerm.toLowerCase()) ||
+                  exercise.exerciseEstimatedMax
+                      .toLowerCase()
+                      .includes(globalState.searchTerm.toLowerCase())
+            })
+            .sort(compare)
+      }
+    }
 );
 
 function compare(a, b) {
@@ -153,7 +216,6 @@ function viewLogs(id) {
     },
   });
 }
-
 
 </script>
 
