@@ -53,9 +53,9 @@
                         class="text-sm text-primary-textTitle">sec</span>
                           </span>
           </div>
-          <div  class="text-right pr-2 pb-2">
+          <div  class="text-right mr-2 mb-2">
           <span
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-buttonPrimary text-secondary-textBody"
+              class="px-1.5 py-0.5 rounded-full text-sm font-medium bg-buttonPrimary text-secondary-textBody"
           >
             Time
           </span>

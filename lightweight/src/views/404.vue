@@ -7,7 +7,7 @@
     </p>
     <p class="text-primary ">
       Go back to the
-      <router-link to="/dashboard">dashboard page</router-link>
+      <router-link to="/exercises">exercises overview</router-link>
     </p>
   </div>
 </template>

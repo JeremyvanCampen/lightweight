@@ -156,6 +156,7 @@
                             type="number"
                             step=".01"
                             :required="!exercise.isBodyWeight"
+                            :placeholder="exercise.isBodyWeight ? 'Optional' : 'Required'"
                             v-model="set.weight"
                             class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm required"
                             :class="
@@ -218,6 +219,12 @@
                         >Time in seconds</label
                         >
                       </div>
+                      <div class="col-span-4">
+                        <label
+                            class="block text-sm font-light text-primary-textSub"
+                        >Weight (KG)</label
+                        >
+                      </div>
                     </div>
                     <!-- Toegevoegde componenten met een match (addedComponents) -->
                     <div
@@ -256,6 +263,20 @@
                           "
                             :aria-invalid="formError"
                             aria-describedby="description-error"
+                        />
+                      </div>
+                      <div class="col-span-5">
+                        <input
+                            type="number"
+                            v-model="formData.setToAdd.weight"
+                            step=".01"
+                            placeholder="Optional"
+                            class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                            :class="
+                          formError
+                            ? 'text-red-900 placeholder-red-300 border-red-300 focus:ring-red-500 focus:border-red-500'
+                            : 'placeholder-gray-400 border-gray-300 focus:ring-primary focus:border-primary'
+                        "
                         />
                       </div>
                     </div>
@@ -303,6 +324,7 @@
                           type="number"
                           v-model="formData.setToAdd.weight"
                           step=".01"
+                          :placeholder="exercise.isBodyWeight ? 'Optional' : 'Required'"
                           class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                           :class="
                           formError
@@ -339,6 +361,12 @@
                       >Time in seconds</label
                       >
                     </div>
+                    <div class="col-span-4">
+                      <label
+                          class="block text-sm font-light text-primary-textSub"
+                      >Weight (KG)</label
+                      >
+                    </div>
                   </div>
 
                   <div class="grid grid-cols-12 gap-4">
@@ -346,6 +374,7 @@
                       <input
                           type="number"
                           v-model="formData.setToAdd.time"
+                          placeholder="Required"
                           class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
                           :class="
                           formError
@@ -354,6 +383,21 @@
                         "
                       />
                     </div>
+                    <div class="col-span-5">
+                      <input
+                          type="number"
+                          v-model="formData.setToAdd.weight"
+                          step=".01"
+                          placeholder="Optional"
+                          class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                          :class="
+                          formError
+                            ? 'text-red-900 placeholder-red-300 border-red-300 focus:ring-red-500 focus:border-red-500'
+                            : 'placeholder-gray-400 border-gray-300 focus:ring-primary focus:border-primary'
+                        "
+                      />
+                    </div>
+
                     <div class="relative col-span-2">
                       <button
                           @click="addNewSet()"
@@ -546,22 +590,23 @@ async function saveExercise() {
 function addNewSet() {
   let newSet;
 
+  if (formData.value.setToAdd.weight % 1 != 0) {
+    formData.value.setToAdd.weight = parseFloat(
+        formData.value.setToAdd.weight
+    ).toFixed(2);
+  }
+
   if (props.exercise.isTime) {
     if (formData.value.setToAdd.time % 1 != 0) {
       formData.value.setToAdd.time = Math.round(
-
           formData.value.setToAdd.time
       );
     }
     newSet = {
       time: formData.value.setToAdd.time,
+      weight: formData.value.setToAdd.weight
     }
   } else {
-    if (formData.value.setToAdd.weight % 1 != 0) {
-      formData.value.setToAdd.weight = parseFloat(
-          formData.value.setToAdd.weight
-      ).toFixed(2);
-    }
 
     newSet = {
       reps: formData.value.setToAdd.reps,
