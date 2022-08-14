@@ -539,19 +539,26 @@ async function saveExercise() {
             if (oneRM > props.exercise.exerciseEstimatedMax[props.exercise.exerciseEstimatedMax.length - 1]) {
               updateDoc(doc(db, "exercises", props.exerciseID), {
                 exerciseEstimatedMax: arrayUnion(oneRM.toFixed(1)),
-                exerciseEstimatedMaxDate: arrayUnion(Date()),
+                exerciseEstimatedMaxDate: arrayUnion(moment().format("DD-MM-YYYY HH:mm:ss")),
+                editedDate: moment().format("DD-MM-YYYY HH:mm"),
               })
                   .then((result) => {
                     toaster.show(`New record! 1RM ${oneRM.toFixed(1)} KG `);
                     closeCreateLogModal();
                   })
             } else {
-              closeCreateLogModal();
+              updateDoc(doc(db, "exercises", props.exerciseID), {
+                editedDate: moment().format("DD-MM-YYYY HH:mm"),
+              })
+                  .then((result) => {
+                    closeCreateLogModal();
+                  })
             }
           } else {
             updateDoc(doc(db, "exercises", props.exerciseID), {
-              exerciseEstimatedMax: arrayUnion(oneRM.toFixed(1)),
-              exerciseEstimatedMaxDate: arrayUnion(Date()),
+              exerciseEstimatedMax: arrayUnion(0,oneRM.toFixed(1)),
+              exerciseEstimatedMaxDate: arrayUnion(0,moment().format("DD-MM-YYYY HH:mm:ss")),
+              editedDate: moment().format("DD-MM-YYYY HH:mm"),
             })
                 .then((result) => {
                   toaster.show(`New record! 1RM ${oneRM.toFixed(1)} KG `);
@@ -562,21 +569,28 @@ async function saveExercise() {
           if (props.exercise.exerciseHighestReps != undefined) {
             if (hR > props.exercise.exerciseHighestReps[props.exercise.exerciseHighestReps.length - 1]) {
               updateDoc(doc(db, "exercises", props.exerciseID), {
-                exerciseHighestReps: arrayUnion(hR),
-                exerciseEstimatedHighestRepsDate: arrayUnion(Date()),
+                exerciseHighestReps: arrayUnion(0, hR),
+                exerciseEstimatedHighestRepsDate: arrayUnion(moment().format("DD-MM-YYYY HH:mm:ss")),
+                editedDate: moment().format("DD-MM-YYYY HH:mm"),
               })
                   .then((result) => {
                     toaster.show(`New record! HR is now ${hR}`);
                     closeCreateLogModal();
                   })
             } else {
-              closeCreateLogModal();
+              updateDoc(doc(db, "exercises", props.exerciseID), {
+                editedDate: moment().format("DD-MM-YYYY HH:mm"),
+              })
+                  .then((result) => {
+                    closeCreateLogModal();
+                  })
             }
 
           } else {
             updateDoc(doc(db, "exercises", props.exerciseID), {
-              exerciseHighestReps: arrayUnion(hR),
-              exerciseEstimatedHighestRepsDate: arrayUnion(Date()),
+              exerciseHighestReps: arrayUnion(0, hR),
+              exerciseEstimatedHighestRepsDate: arrayUnion(0,moment().format("DD-MM-YYYY HH:mm:ss")),
+              editedDate: moment().format("DD-MM-YYYY HH:mm"),
             })
                 .then((result) => {
                   toaster.show(`New record! HR is now ${hR}`);
@@ -589,19 +603,26 @@ async function saveExercise() {
             if (hT > props.exercise.exerciseHighestTime[props.exercise.exerciseHighestTime.length - 1]) {
               updateDoc(doc(db, "exercises", props.exerciseID), {
                 exerciseHighestTime: arrayUnion(hT),
-                exerciseEstimatedHighestTimeDate: arrayUnion(Date())
+                exerciseEstimatedHighestTimeDate: arrayUnion(moment().format("DD-MM-YYYY HH:mm:ss")),
+                editedDate: moment().format("DD-MM-YYYY HH:mm"),
               })
                   .then((result) => {
                     toaster.show(`New record! HT is now ${hT} seconds`);
                     closeCreateLogModal();
                   })
             } else {
-              closeCreateLogModal();
+              updateDoc(doc(db, "exercises", props.exerciseID), {
+                editedDate: moment().format("DD-MM-YYYY HH:mm"),
+              })
+                  .then((result) => {
+                    closeCreateLogModal();
+                  })
             }
           } else {
             updateDoc(doc(db, "exercises", props.exerciseID), {
-              exerciseHighestTime: arrayUnion(hT),
-              exerciseEstimatedHighestTimeDate: arrayUnion(Date())
+              exerciseHighestTime: arrayUnion(0, hT),
+              exerciseEstimatedHighestTimeDate: arrayUnion(0,moment().format("DD-MM-YYYY HH:mm:ss")),
+              editedDate: moment().format("DD-MM-YYYY HH:mm"),
             })
                 .then((result) => {
                   toaster.show(`New record! HT is now ${hT} seconds`);

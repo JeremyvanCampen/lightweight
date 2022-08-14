@@ -14,8 +14,10 @@
       >
         {{ exercise.exerciseName }}
       </h2>
+
     </div>
      <div class="flex flex-row ">
+
       <div
         class="grid ml-8 mr-8 place-items-end w-full p-2"
       >
@@ -44,6 +46,11 @@
 
       </div>
     </div>
+    <label
+        class="text-left ml-8 text-sm font-light text-primary-textTitle pr-4"
+    >
+      {{ logs.length }} log(s)
+    </label>
 
     <TransitionGroup
         class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 2xl:grid-cols-6 m-8"
@@ -54,7 +61,7 @@
           v-for="(log, index) in filteredAndSorted"
           :key="log.id"
           :style="{ transitionDelay: 0.02 * index + 's' }"
-          class="bg-bg rounded-lg cursor-pointer hover:border-2 hover:border-buttonPrimary flex flex-1 flex-col justify-between"
+          class="bg-bg rounded-lg cursor-pointer  flex flex-1 flex-col justify-between"
       >
         <div class="flex">
           <span
@@ -64,22 +71,22 @@
           </span>
         </div>
         <div class="flex flex-1 flex-col justify-between">
-          <div class="flex flex-col mt-4 mb-4 mr-4 ml-4">
+          <div class="flex flex-col mt-4 mb-4">
             <div
                 v-for="(set, index) in log.sets"
                 :key="index"
                 class="grid grid-cols-2 gap-4"
             >
-              <div v-if="!exercise.isTime" class="col-span-1 self-center text-left">
+              <div v-if="!exercise.isTime" class="col-span-1 self-center text-right">
                 <span class="truncate">{{ set.reps }}</span>
                 <span class="truncate text-xs font-light"> reps</span>
               </div>
-              <div v-if="exercise.isBodyWeight" class="col-span-1 self-center truncate text-right">
+              <div v-if="exercise.isBodyWeight" class="col-span-1 self-center truncate text-left">
                 <span v-if="set.weight > 0" class="truncate">+ {{ set.weight }}</span>
                 <span v-if="set.weight > 0" class="truncate text-xs font-light"> KG</span>
                 <span v-else class="truncate text-xs font-light"> BW</span>
               </div>
-              <div v-if="exercise.isTime" class="col-span-1 self-center text-left truncate">
+              <div v-if="exercise.isTime" class="col-span-1 self-center text-right truncate">
                 <span v-if="set.time > 0" class="truncate">{{ set.time }}</span>
                 <span v-if="set.time > 0" class="truncate text-xs font-light"> sec</span>
                 <span v-else class="truncate text-xs font-light"> seconds</span>
@@ -88,7 +95,7 @@
                 <span v-if="set.weight > 0" class="truncate">{{ set.weight }}</span>
                 <span v-if="set.weight > 0" class="truncate text-xs font-light"> KG</span>
               </div>
-              <div v-if="!exercise.isBodyWeight && !exercise.isTime" class="col-span-1 self-center text-right">
+              <div v-if="!exercise.isBodyWeight && !exercise.isTime" class="col-span-1 self-center text-left">
                 <span class="truncate">{{ set.weight }}</span>
                 <span class="truncate text-xs font-light"> KG</span>
               </div>

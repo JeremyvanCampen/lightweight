@@ -403,6 +403,7 @@ async function saveExercise() {
     createdByName: user.value.email,
     createdByUid: user.value.uid,
     createdDate: moment().format("DD-MM-YYYY HH:mm"),
+    editedDate: '',
     timeStampCreated: new Date(),
     isBodyWeight: bwEnabled.value,
     isTime: timeEnabled.value,

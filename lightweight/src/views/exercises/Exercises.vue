@@ -33,8 +33,8 @@
               </span>
           <span v-if="exercise.exerciseHighestTime && exercise.isTime">
           HT {{
-            exercise.exerciseHighestTime[exercise.exerciseHighestTime.length - 1]
-          }}
+              exercise.exerciseHighestTime[exercise.exerciseHighestTime.length - 1]
+            }}
           </span>
         </label>
 
@@ -129,10 +129,21 @@ import {getAuth} from "firebase/auth";
 import {computed, onUnmounted, ref} from "vue";
 import {db} from "@/firebase/firebase.js";
 import {useRouter} from "vue-router";
-import {collection, onSnapshot, orderBy, query, where} from "firebase/firestore";
+import {
+  arrayUnion,
+  collection,
+  deleteField,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  where
+} from "firebase/firestore";
 import {useUiStateComposable} from '@/composables/uistate-composable';
 import {LineChart} from 'vue-chart-3';
 import {Chart, registerables} from "chart.js";
+import moment from "moment/moment";
 
 Chart.register(...registerables);
 
@@ -194,12 +205,67 @@ const filteredAndSorted = computed(() => {
       } else {
         return exercises.value
             .filter((exercise) => {
-              return exercise.exerciseName
-                      .toLowerCase()
-                      .includes(globalState.searchTerm.toLowerCase()) ||
-                  exercise.exerciseEstimatedMax
-                      .toLowerCase()
-                      .includes(globalState.searchTerm.toLowerCase())
+              if (exercise.isWeight) {
+                if (exercise.exerciseEstimatedMax) {
+                  return exercise.exerciseName
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase()) ||
+                      exercise.exerciseEstimatedMax[exercise.exerciseEstimatedMax.length - 1]
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase()) ||
+                      exercise.editedDate
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase())
+                } else {
+                  return exercise.exerciseName
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase()) ||
+                      exercise.editedDate
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase())
+                }
+              } else if (exercise.isBodyWeight) {
+                if (exercise.exerciseHighestReps) {
+                  return exercise.exerciseName
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase()) ||
+                      exercise.exerciseHighestReps[exercise.exerciseHighestReps.length - 1]
+                          .toString()
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase()) ||
+                      exercise.editedDate
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase())
+                } else {
+                  return exercise.exerciseName
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase()) ||
+                      exercise.editedDate
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase())
+                }
+              } else if (exercise.isTime) {
+                if (exercise.exerciseHighestTime) {
+                  return exercise.exerciseName
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase()) ||
+                      exercise.exerciseHighestTime[exercise.exerciseHighestTime.length - 1]
+                          .toString()
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase()) ||
+                      exercise.editedDate
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase())
+                } else {
+                  return exercise.exerciseName
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase()) ||
+                      exercise.editedDate
+                          .toLowerCase()
+                          .includes(globalState.searchTerm.toLowerCase())
+                }
+              }
+
             })
             .sort(compare)
       }
