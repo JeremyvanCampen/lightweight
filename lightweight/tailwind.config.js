@@ -32,7 +32,7 @@ module.exports = {
         },
         secondary: {
           // button: "#c38fff",
-          button: "#02ae9e",
+          button: "#BB86FC",
           textBody: "#000000",
           light: "#474747",
           DEFAULT: "#333333",

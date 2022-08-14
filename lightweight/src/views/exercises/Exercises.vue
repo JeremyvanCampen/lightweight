@@ -10,7 +10,7 @@
           v-for="(exercise, index) of filteredAndSorted"
           :key="exercise.id"
           :style="{ transitionDelay: 0.02 * index + 's' }"
-          class="relative bg-bg rounded-lg cursor-pointer hover:border-2 hover:border-buttonPrimary flex flex-1 flex-col justify-between"
+          class="relative bg-bg rounded-lg cursor-pointer  flex flex-1 flex-col justify-between"
           @click="viewLogs(exercise.id)"
       >
         <div class="flex mr-8">
@@ -20,41 +20,72 @@
             <span class="ml-3">{{ exercise.exerciseName }}</span>
           </span>
         </div>
-        <label v-if="exercise.isWeight" class="ml-4 text-2xl text-primary-textBody font-medium pb-2 pt-2">
-              <span v-if="exercise.exerciseEstimatedMax">
-                <span class="text-base text-primary"> 1RM </span> {{ exercise.exerciseEstimatedMax[exercise.exerciseEstimatedMax.length -1] }} <span
-                  class="text-sm text-primary-textTitle">KG</span>
+        <label class="ml-4 sm:text-2xl xl:text-3xl 2xl:text-4xl text-2xl text-primary-textBody font-medium pb-2 pt-2">
+              <span v-if="exercise.exerciseEstimatedMax && exercise.isWeight">
+               1RM {{
+                  exercise.exerciseEstimatedMax[exercise.exerciseEstimatedMax.length - 1]
+                }}
               </span>
+          <span v-if="exercise.exerciseHighestReps && exercise.isBodyWeight">
+               HR {{
+              exercise.exerciseHighestReps[exercise.exerciseHighestReps.length - 1]
+            }}
+              </span>
+          <span v-if="exercise.exerciseHighestTime && exercise.isTime">
+          HT {{
+            exercise.exerciseHighestTime[exercise.exerciseHighestTime.length - 1]
+          }}
+          </span>
         </label>
-        <div class="w-full" v-if="exercise.isWeight">
-          <LineChart :chartData="{
-  labels: exercise.exerciseEstimatedMaxDate,
-  datasets: [{
-    data: exercise.exerciseEstimatedMax,
-    fill: true,
-    borderColor: 'rgb(75, 192, 192)',
-    borderWidth: 3,
-    tension: 0.1,
-    pointStyle: 'line'
-  }]
-}" :options="testData.options" class="ml-1 mr-1"/>
-        </div>
-        <label v-if="exercise.isBodyWeight" class="ml-4 text-2xl text-primary-textBody font-medium pb-2 pt-2">
-              <span v-if="exercise.exerciseHighestReps">
-                <span class="text-base text-primary"> HR </span> {{ exercise.exerciseHighestReps }} <span
-                  class="text-sm text-primary-textTitle">reps</span>
-              </span>
 
-        </label>
-        <label v-if="exercise.isTime" class="ml-4 text-2xl text-primary-textBody font-medium pb-2 pt-2">
-              <span v-if="exercise.exerciseHighestTime">
-                <span class="text-base text-primary"> HT </span> {{ exercise.exerciseHighestTime }} <span
-                  class="text-sm text-primary-textTitle">sec</span>
-              </span>
-        </label>
+        <div class="m-2" v-if="exercise.isWeight">
+          <LineChart
+              :chartData="{
+                        labels: exercise.exerciseEstimatedMaxDate,
+                        datasets: [{
+                          data: exercise.exerciseEstimatedMax,
+                          fill: false,
+                          borderColor: 'rgb(255, 255, 255)',
+                          borderWidth: 3,
+                          tension: 0.1,
+                          pointStyle: 'line'
+                        }]
+                      }"
+              :options="testData.options" class="ml-1 mr-1"/>
+        </div>
+        <div class="m-2" v-if="exercise.isBodyWeight">
+          <LineChart
+              :chartData="{
+                        labels: exercise.exerciseEstimatedHighestRepsDate,
+                        datasets: [{
+                          data: exercise.exerciseHighestReps,
+                          fill: false,
+                         borderColor: 'rgb(255, 255, 255)',
+                          borderWidth: 3,
+                          tension: 0.1,
+                          pointStyle: 'line'
+                        }]
+                      }"
+              :options="testData.options" class="ml-1 mr-1"/>
+        </div>
+        <div class="m-2" v-if="exercise.isTime">
+          <LineChart
+              :chartData="{
+                        labels: exercise.exerciseEstimatedHighestTimeDate,
+                        datasets: [{
+                          data: exercise.exerciseHighestTime,
+                          fill: false,
+                          borderColor: 'rgb(255, 255, 255)',
+                          borderWidth: 3,
+                          tension: 0.1,
+                          pointStyle: 'line'
+                        }]
+                      }"
+              :options="testData.options" class="ml-1 mr-1"/>
+        </div>
         <div class="text-right pr-2 pb-2">
           <span
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-buttonPrimary text-secondary-textBody"
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-secondary-button text-secondary-textBody"
           >
             <span v-if="exercise.isWeight">
              <svg class="h-5 w-5" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path
@@ -119,9 +150,11 @@ const testData = {
     borderColor: 'rgb(75, 192, 192)',
     borderWidth: 3,
     tension: 0.1,
-    pointStyle: 'line'
+    pointStyle: 'rectRounded'
   }],
   options: {
+    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false
@@ -132,7 +165,7 @@ const testData = {
         display: false // Hide Y axis labels
       },
       x: {
-        display: true // Hide X axis labels
+        display: false // Hide X axis labels
       }
     }
   }
@@ -192,13 +225,15 @@ function getReactiveExercises() {
       orderBy("timeStampCreated", "desc")
   );
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-    exercises.value = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    exercises.value = querySnapshot.docs.map((doc) => (
+        {
+          id: doc.id,
+          ...doc.data(),
+        }));
   });
   onUnmounted(unsubscribe);
 }
+
 
 function openCreateExerciseModal() {
   isExerciseModalOpen.value = true;

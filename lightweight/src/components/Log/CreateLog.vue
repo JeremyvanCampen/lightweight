@@ -438,7 +438,7 @@ import {MinusSmIcon as MinusSmIconOutline, PlusSmIcon as PlusSmIconOutline,} fro
 
 import Button from "../../components/Button.vue";
 import {db} from "@/firebase/firebase.js";
-import {addDoc, collection, doc, updateDoc, arrayUnion} from "firebase/firestore";
+import {addDoc, arrayUnion, collection, doc, updateDoc} from "firebase/firestore";
 
 import moment from "moment";
 import {getAuth} from "firebase/auth";
@@ -499,8 +499,9 @@ async function submit() {
 
 async function saveExercise() {
   const logsCollection = collection(db, "exercises", props.exerciseID, "logs");
+  const recordsCollection = collection(db, "exercises", props.exerciseID, "records");
 
-  if (!props.exercise.isBodyWeight && !props.exercise.isTime) {
+  if (props.exercise.isWeight) {
     var oneRM = 0;
 
     for (var set of formData.value.sets) {
@@ -510,16 +511,14 @@ async function saveExercise() {
         oneRM = oneRMCalculated;
       }
     }
-  } else if(props.exercise.isBodyWeight) {
+  } else if (props.exercise.isBodyWeight) {
     var hR = 0;
     for (var set of formData.value.sets) {
       if (set.reps > hR) {
         hR = set.reps;
       }
     }
-  }
-  else if(props.exercise.isTime)
-  {
+  } else if (props.exercise.isTime) {
     var hT = 0;
     for (var set of formData.value.sets) {
       if (set.time > hT) {
@@ -535,37 +534,81 @@ async function saveExercise() {
     timeStampCreated: new Date(),
   })
       .then((result) => {
-        if ((!props.exercise.isBodyWeight && !props.exercise.isTime && oneRM > props.exercise.exerciseEstimatedMax) || (!props.exercise.isBodyWeight && !props.exercise.isTime && props.exercise.exerciseEstimatedMax == undefined)) {
-          const oldOneRM: number = props.exercise.exerciseEstimatedMax;
-          updateDoc(doc(db, "exercises", props.exerciseID), {
-            exerciseEstimatedMax: arrayUnion(oneRM.toFixed(1)),
-            exerciseEstimatedMaxDate: arrayUnion(moment().format("DD-MM-YYYY HH:mm")),
-          })
-              .then((result) => {
-                toaster.show(`New record! 1RM ${oneRM.toFixed(1)} KG `);
-                closeCreateLogModal();
+        if (props.exercise.isWeight) {
+          if (props.exercise.exerciseEstimatedMax != undefined) {
+            if (oneRM > props.exercise.exerciseEstimatedMax[props.exercise.exerciseEstimatedMax.length - 1]) {
+              updateDoc(doc(db, "exercises", props.exerciseID), {
+                exerciseEstimatedMax: arrayUnion(oneRM.toFixed(1)),
+                exerciseEstimatedMaxDate: arrayUnion(Date()),
               })
-        } else if ((props.exercise.isBodyWeight && hR > props.exercise.exerciseHighestReps) || (props.exercise.isBodyWeight && props.exercise.exerciseHighestReps == undefined)) {
+                  .then((result) => {
+                    toaster.show(`New record! 1RM ${oneRM.toFixed(1)} KG `);
+                    closeCreateLogModal();
+                  })
+            } else {
+              closeCreateLogModal();
+            }
+          } else {
+            updateDoc(doc(db, "exercises", props.exerciseID), {
+              exerciseEstimatedMax: arrayUnion(oneRM.toFixed(1)),
+              exerciseEstimatedMaxDate: arrayUnion(Date()),
+            })
+                .then((result) => {
+                  toaster.show(`New record! 1RM ${oneRM.toFixed(1)} KG `);
+                  closeCreateLogModal();
+                })
+          }
+        } else if (props.exercise.isBodyWeight) {
+          if (props.exercise.exerciseHighestReps != undefined) {
+            if (hR > props.exercise.exerciseHighestReps[props.exercise.exerciseHighestReps.length - 1]) {
+              updateDoc(doc(db, "exercises", props.exerciseID), {
+                exerciseHighestReps: arrayUnion(hR),
+                exerciseEstimatedHighestRepsDate: arrayUnion(Date()),
+              })
+                  .then((result) => {
+                    toaster.show(`New record! HR is now ${hR}`);
+                    closeCreateLogModal();
+                  })
+            } else {
+              closeCreateLogModal();
+            }
 
-          updateDoc(doc(db, "exercises", props.exerciseID), {
-            exerciseHighestReps: hR,
-          })
-              .then((result) => {
-                toaster.show(`New record! HR is now ${hR}`);
-                closeCreateLogModal();
+          } else {
+            updateDoc(doc(db, "exercises", props.exerciseID), {
+              exerciseHighestReps: arrayUnion(hR),
+              exerciseEstimatedHighestRepsDate: arrayUnion(Date()),
+            })
+                .then((result) => {
+                  toaster.show(`New record! HR is now ${hR}`);
+                  closeCreateLogModal();
+                })
+
+          }
+        } else if (props.exercise.isTime) {
+          if (props.exercise.exerciseHighestTime != undefined) {
+            if (hT > props.exercise.exerciseHighestTime[props.exercise.exerciseHighestTime.length - 1]) {
+              updateDoc(doc(db, "exercises", props.exerciseID), {
+                exerciseHighestTime: arrayUnion(hT),
+                exerciseEstimatedHighestTimeDate: arrayUnion(Date())
               })
-        }
-        else if((props.exercise.isTime && hT > props.exercise.exerciseHighestTime) || (props.exercise.isTime && props.exercise.exerciseHighestTime == undefined))
-        {
-          updateDoc(doc(db, "exercises", props.exerciseID), {
-            exerciseHighestTime: hT,
-          })
-              .then((result) => {
-                toaster.show(`New record! HT is now ${hT} seconds`);
-                closeCreateLogModal();
-              })
-        }
-        else {
+                  .then((result) => {
+                    toaster.show(`New record! HT is now ${hT} seconds`);
+                    closeCreateLogModal();
+                  })
+            } else {
+              closeCreateLogModal();
+            }
+          } else {
+            updateDoc(doc(db, "exercises", props.exerciseID), {
+              exerciseHighestTime: arrayUnion(hT),
+              exerciseEstimatedHighestTimeDate: arrayUnion(Date())
+            })
+                .then((result) => {
+                  toaster.show(`New record! HT is now ${hT} seconds`);
+                  closeCreateLogModal();
+                })
+          }
+        } else {
           closeCreateLogModal();
         }
       })
