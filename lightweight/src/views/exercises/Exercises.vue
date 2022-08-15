@@ -1,8 +1,8 @@
 <template>
-  <div class="flex flex-col flex-1 w-full mx-auto bg-bg-600">
+  <div>
     <h2 class="m-8 text-3xl font-light text-primary">Exercises</h2>
     <TransitionGroup
-        class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 m-8"
+        class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 xl:columns-6 2xl:columns-8 m-8"
         name="list"
         tag="ul"
     >
@@ -10,7 +10,7 @@
           v-for="(exercise, index) of filteredAndSorted"
           :key="exercise.id"
           :style="{ transitionDelay: 0.02 * index + 's' }"
-          class="relative bg-bg rounded-lg cursor-pointer  flex flex-1 flex-col justify-between"
+          class="bg-bg rounded-lg cursor-pointer mb-5 flex flex-1 flex-col justify-between w-full column-item"
           @click="viewLogs(exercise.id)"
       >
         <div class="flex mr-8">
@@ -38,45 +38,48 @@
           </span>
         </label>
 
-        <div class="m-2" v-if="exercise.isWeight">
-          <LineChart
+        <div class="m-2" v-if="exercise.isWeight && exercise.exerciseEstimatedMax.length > 1">
+          <BarChart
               :chartData="{
                         labels: exercise.exerciseEstimatedMaxDate,
                         datasets: [{
                           data: exercise.exerciseEstimatedMax,
                           fill: false,
-                          borderColor: 'rgb(255, 255, 255)',
-                          borderWidth: 3,
+                          borderColor: 'rgb(187, 134, 252)',
+                          backgroundColor:  'rgb(187, 134, 252)',
+                          borderWidth: 0,
                           tension: 0.1,
                           pointStyle: 'line'
                         }]
                       }"
               :options="testData.options" class="ml-1 mr-1"/>
         </div>
-        <div class="m-2" v-if="exercise.isBodyWeight">
-          <LineChart
+        <div class="m-2" v-if="exercise.isBodyWeight && exercise.exerciseHighestReps.length > 1">
+          <BarChart
               :chartData="{
                         labels: exercise.exerciseEstimatedHighestRepsDate,
                         datasets: [{
                           data: exercise.exerciseHighestReps,
                           fill: false,
-                         borderColor: 'rgb(255, 255, 255)',
-                          borderWidth: 3,
+                        borderColor: 'rgb(187, 134, 252)',
+                          backgroundColor:  'rgb(187, 134, 252)',
+                          borderWidth: 0,
                           tension: 0.1,
                           pointStyle: 'line'
                         }]
                       }"
               :options="testData.options" class="ml-1 mr-1"/>
         </div>
-        <div class="m-2" v-if="exercise.isTime">
-          <LineChart
+        <div class="m-2" v-if="exercise.isTime && exercise.exerciseHighestTime.length > 1">
+          <BarChart
               :chartData="{
                         labels: exercise.exerciseEstimatedHighestTimeDate,
                         datasets: [{
                           data: exercise.exerciseHighestTime,
                           fill: false,
-                          borderColor: 'rgb(255, 255, 255)',
-                          borderWidth: 3,
+                           borderColor: 'rgb(187, 134, 252)',
+                          backgroundColor:  'rgb(187, 134, 252)',
+                          borderWidth: 0,
                           tension: 0.1,
                           pointStyle: 'line'
                         }]
@@ -141,7 +144,7 @@ import {
   where
 } from "firebase/firestore";
 import {useUiStateComposable} from '@/composables/uistate-composable';
-import {LineChart} from 'vue-chart-3';
+import {LineChart, BarChart} from 'vue-chart-3';
 import {Chart, registerables} from "chart.js";
 import moment from "moment/moment";
 
@@ -165,7 +168,7 @@ const testData = {
   }],
   options: {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
     plugins: {
       legend: {
         display: false
@@ -173,7 +176,7 @@ const testData = {
     },
     scales: {
       y: {
-        display: false // Hide Y axis labels
+        display: false,// Hide Y axis labels
       },
       x: {
         display: false // Hide X axis labels
@@ -335,4 +338,8 @@ function viewLogs(id) {
 
 /* ensure leaving items are taken out of layout flow so that moving
    animations can be calculated correctly. */
+.column-item {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
 </style>

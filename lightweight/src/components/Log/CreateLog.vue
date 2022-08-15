@@ -556,8 +556,8 @@ async function saveExercise() {
             }
           } else {
             updateDoc(doc(db, "exercises", props.exerciseID), {
-              exerciseEstimatedMax: arrayUnion(0,oneRM.toFixed(1)),
-              exerciseEstimatedMaxDate: arrayUnion(0,moment().format("DD-MM-YYYY HH:mm:ss")),
+              exerciseEstimatedMax: arrayUnion(oneRM.toFixed(1)),
+              exerciseEstimatedMaxDate: arrayUnion(moment().format("DD-MM-YYYY HH:mm:ss")),
               editedDate: moment().format("DD-MM-YYYY HH:mm"),
             })
                 .then((result) => {
@@ -569,7 +569,7 @@ async function saveExercise() {
           if (props.exercise.exerciseHighestReps != undefined) {
             if (hR > props.exercise.exerciseHighestReps[props.exercise.exerciseHighestReps.length - 1]) {
               updateDoc(doc(db, "exercises", props.exerciseID), {
-                exerciseHighestReps: arrayUnion(0, hR),
+                exerciseHighestReps: arrayUnion(hR),
                 exerciseEstimatedHighestRepsDate: arrayUnion(moment().format("DD-MM-YYYY HH:mm:ss")),
                 editedDate: moment().format("DD-MM-YYYY HH:mm"),
               })
@@ -588,8 +588,8 @@ async function saveExercise() {
 
           } else {
             updateDoc(doc(db, "exercises", props.exerciseID), {
-              exerciseHighestReps: arrayUnion(0, hR),
-              exerciseEstimatedHighestRepsDate: arrayUnion(0,moment().format("DD-MM-YYYY HH:mm:ss")),
+              exerciseHighestReps: arrayUnion(hR),
+              exerciseEstimatedHighestRepsDate: arrayUnion(moment().format("DD-MM-YYYY HH:mm:ss")),
               editedDate: moment().format("DD-MM-YYYY HH:mm"),
             })
                 .then((result) => {
@@ -620,8 +620,8 @@ async function saveExercise() {
             }
           } else {
             updateDoc(doc(db, "exercises", props.exerciseID), {
-              exerciseHighestTime: arrayUnion(0, hT),
-              exerciseEstimatedHighestTimeDate: arrayUnion(0,moment().format("DD-MM-YYYY HH:mm:ss")),
+              exerciseHighestTime: arrayUnion(hT),
+              exerciseEstimatedHighestTimeDate: arrayUnion(moment().format("DD-MM-YYYY HH:mm:ss")),
               editedDate: moment().format("DD-MM-YYYY HH:mm"),
             })
                 .then((result) => {
