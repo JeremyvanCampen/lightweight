@@ -38,8 +38,9 @@
           </span>
         </label>
 
-        <div class="m-2" v-if="exercise.isWeight && exercise.exerciseEstimatedMax.length > 1">
+        <div class="m-2" v-if="exercise.isWeight && exercise.exerciseEstimatedMax">
           <BarChart
+              v-if="exercise.exerciseEstimatedMax.length > 1"
               :chartData="{
                         labels: exercise.exerciseEstimatedMaxDate,
                         datasets: [{
@@ -54,8 +55,9 @@
                       }"
               :options="testData.options" class="ml-1 mr-1"/>
         </div>
-        <div class="m-2" v-if="exercise.isBodyWeight && exercise.exerciseHighestReps.length > 1">
+        <div class="m-2" v-if="exercise.isBodyWeight && exercise.exerciseHighestReps">
           <BarChart
+              v-if="exercise.exerciseHighestReps.length > 1"
               :chartData="{
                         labels: exercise.exerciseEstimatedHighestRepsDate,
                         datasets: [{
@@ -70,8 +72,9 @@
                       }"
               :options="testData.options" class="ml-1 mr-1"/>
         </div>
-        <div class="m-2" v-if="exercise.isTime && exercise.exerciseHighestTime.length > 1">
+        <div class="m-2" v-if="exercise.isTime && exercise.exerciseHighestTime">
           <BarChart
+              v-if="exercise.exerciseHighestTime.length > 1"
               :chartData="{
                         labels: exercise.exerciseEstimatedHighestTimeDate,
                         datasets: [{
