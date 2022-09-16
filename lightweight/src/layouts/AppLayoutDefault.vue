@@ -51,7 +51,7 @@
                 </button>
               </div>
             </TransitionChild>
-            <div class="flex justify-center pt-4">
+            <div class="flex justify-center pt-6">
               <h2 class="font-bold">
                 Lightweight
               </h2>
@@ -132,7 +132,7 @@
                   </Disclosure>
                 </div>
               </div>
-              <div class="absolute bottom-3 flex w-full justify-center">
+              <div class="absolute bottom-16 flex w-full justify-center">
                 <dark-mode></dark-mode>
               </div>
             </nav>
@@ -150,7 +150,7 @@
     <div class="hidden xl:flex xl:w-64 xl:flex-col xl:fixed xl:inset-y-0 shadow">
       <!-- Sidebar component, swap this element with another sidebar if you like -->
       <div class="flex flex-col flex-grow overflow-y-auto bg-bg dark:bg-bg-darkOffset">
-        <div class="flex justify-center pt-4">
+        <div class="flex justify-center pt-6">
           <h2>
             Lightweight
           </h2>

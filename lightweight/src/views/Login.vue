@@ -5,7 +5,7 @@
     >
       <div class="w-full max-w-sm mx-auto lg:w-96  rounded-lg p-8">
         <div>
-          <h2 class="mt-6 text-center">
+          <h2 class="mt-6 text-center font-bold text-buttonPrimary ">
             Lightweight
           </h2>
         </div>
