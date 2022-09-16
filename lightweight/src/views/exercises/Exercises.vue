@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2 class="m-8 text-3xl font-light text-primary">Exercises</h2>
+    <h2 class="m-8">Exercises</h2>
     <TransitionGroup
         class="columns-2 sm:columns-3 md:columns-4 lg:columns-5 xl:columns-6 2xl:columns-8 m-8"
         name="list"
@@ -10,17 +10,17 @@
           v-for="(exercise, index) of filteredAndSorted"
           :key="exercise.id"
           :style="{ transitionDelay: 0.02 * index + 's' }"
-          class="bg-bg rounded-lg cursor-pointer mb-5 flex flex-1 flex-col justify-between w-full column-item"
+          class="bg-bg-darkOffset dark:bg-bg-darkOffset rounded-lg cursor-pointer mb-5 flex flex-1 flex-col justify-between w-full column-item"
           @click="viewLogs(exercise.id)"
       >
         <div class="flex mr-8">
           <span
-              class="relative -mr-px flex-1 inline-flex items-center justify-left pt-3 text-base text-primary-textTitle font-regular border border-transparent rounded-bl-lg "
+              class="relative -mr-px flex-1 inline-flex items-center justify-left pt-3 text-base text-text-darkSub dark:text-text-darkTitle font-regular border border-transparent rounded-bl-lg "
           >
             <span class="ml-3">{{ exercise.exerciseName }}</span>
           </span>
         </div>
-        <label class="ml-4 sm:text-2xl xl:text-3xl 2xl:text-4xl text-2xl text-primary-textBody font-medium pb-2 pt-2">
+        <label class="ml-4 sm:text-2xl xl:text-3xl 2xl:text-4xl text-2xl text-text-darkSub font-medium pb-2 pt-2">
               <span v-if="exercise.exerciseEstimatedMax && exercise.isWeight">
                1RM {{
                   exercise.exerciseEstimatedMax[exercise.exerciseEstimatedMax.length - 1]
@@ -41,18 +41,20 @@
         <div class="m-2" v-if="exercise.isWeight && exercise.exerciseEstimatedMax">
           <BarChart
               v-if="exercise.exerciseEstimatedMax.length > 1"
-              :chartData="{
+              :chartData="
+              {
                         labels: exercise.exerciseEstimatedMaxDate,
                         datasets: [{
                           data: exercise.exerciseEstimatedMax,
                           fill: false,
-                          borderColor: 'rgb(187, 134, 252)',
-                          backgroundColor:  'rgb(187, 134, 252)',
+                          borderColor: 'rgb(207, 0, 21)',
+                          backgroundColor:  'rgb(207, 0, 21)',
                           borderWidth: 0,
                           tension: 0.1,
                           pointStyle: 'line'
                         }]
-                      }"
+                      }
+                      "
               :options="testData.options" class="ml-1 mr-1"/>
         </div>
         <div class="m-2" v-if="exercise.isBodyWeight && exercise.exerciseHighestReps">
@@ -91,7 +93,7 @@
         </div>
         <div class="text-right pr-2 pb-2">
           <span
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-secondary-button text-secondary-textBody"
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-buttonSecondary dark:bg-buttonSecondary-dark text-text-darkSub dark:text-text"
           >
             <span v-if="exercise.isWeight">
              <svg class="h-5 w-5" viewBox="0 0 640 512"><!--! Font Awesome Pro 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path
@@ -112,7 +114,7 @@
 
     <div class="fixed bottom-10 right-10">
       <button
-          class="p-6 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
+          class="p-6 border border-transparent rounded-full shadow-sm text-text-dark dark:text-text bg-buttonPrimary hover:bg-buttonPrimary-hover   dark:bg-buttonPrimary-dark hover:dark:bg-buttonPrimary-darkHover"
           type="button"
           v-on:click="openCreateExerciseModal()"
       >
@@ -129,27 +131,21 @@
 </template>
 
 <script lang="ts" setup>
-import {ClockIcon, PlusSmIcon as PlusSmIconOutline} from "@heroicons/vue/outline";
+import {ClockIcon, PlusSmallIcon as PlusSmIconOutline} from '@heroicons/vue/24/outline'
 import CreateExercise from "@/components/Exercise/CreateExercise.vue";
 import {getAuth} from "firebase/auth";
 import {computed, onUnmounted, ref} from "vue";
 import {db} from "@/firebase/firebase.js";
 import {useRouter} from "vue-router";
-import {
-  arrayUnion,
-  collection,
-  deleteField,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  updateDoc,
-  where
-} from "firebase/firestore";
+import {collection, onSnapshot, orderBy, query, where} from "firebase/firestore";
 import {useUiStateComposable} from '@/composables/uistate-composable';
-import {LineChart, BarChart} from 'vue-chart-3';
+import {BarChart} from 'vue-chart-3';
 import {Chart, registerables} from "chart.js";
-import moment from "moment/moment";
+import {useDark} from '@vueuse/core'
+
+
+const isDark = useDark()
+
 
 Chart.register(...registerables);
 

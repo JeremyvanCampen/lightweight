@@ -134,22 +134,36 @@
                         </label>
                       </div>
                       <div class="col-span-4">
-                        <select
-                            required
-                            class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:cursor-not-allowed disabled:bg-gray-200"
-                            v-model="set.reps"
-                        >
-                          <option value="" disabled hidden>
-                            Select an amount
-                          </option>
-                          <option
-                              v-for="amount in 200"
-                              :key="amount"
-                              :value="amount"
-                          >
-                            {{ amount }}
-                          </option>
-                        </select>
+                        <Listbox as="div" v-model="set.reps">
+                          <div class="relative">
+                            <ListboxButton
+                                class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-white focus:outline-none focus:ring-1 focus:ring-white sm:text-sm">
+                              <span class="block truncate">{{ set.reps }}</span>
+                              <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                <ChevronUpDownIcon class="h-5 w-5 text-black" aria-hidden="true"/>
+                              </span>
+                            </ListboxButton>
+                            <transition leave-active-class="transition ease-in duration-100"
+                                        leave-from-class="opacity-100" leave-to-class="opacity-0">
+                              <ListboxOptions
+                                  class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                <ListboxOption as="template" v-for="amount in 200" :key="amount" :value="amount"
+                                               v-slot="{ active, selected }">
+                                  <li :class="[active ? 'text-white bg-primary-button' : 'text-black-900', 'relative cursor-default select-none py-2 pl-3 pr-9']">
+                                    <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{
+                                        amount
+                                      }}
+                                    </span>
+                                    <span v-if="selected"
+                                          :class="[active ? 'text-white' : 'text-black', 'absolute inset-y-0 right-0 flex items-center pr-4']">
+                                          <CheckIcon class="h-5 w-5" aria-hidden="true"/>
+                                    </span>
+                                  </li>
+                                </ListboxOption>
+                              </ListboxOptions>
+                            </transition>
+                          </div>
+                        </Listbox>
                       </div>
                       <div class="col-span-5">
                         <input
@@ -226,7 +240,7 @@
                         >
                       </div>
                     </div>
-                    <!-- Toegevoegde componenten met een match (addedComponents) -->
+                    <!-- Toegevoegde sets -->
                     <div
                         class="grid grid-cols-12 gap-4"
                         v-for="(set, index) in formData.sets"
@@ -303,6 +317,7 @@
 
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-4">
+
                       <select
                           class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:cursor-not-allowed disabled:bg-gray-200"
                           v-model="formData.setToAdd.reps"
@@ -433,9 +448,22 @@
 </template>
 <script setup lang="ts">
 import {ref} from "vue";
-import {Dialog, DialogOverlay, TransitionChild, TransitionRoot,} from "@headlessui/vue";
-import {MinusSmIcon as MinusSmIconOutline, PlusSmIcon as PlusSmIconOutline,} from "@heroicons/vue/outline";
-
+import {
+  Dialog,
+  DialogOverlay,
+  Listbox,
+  ListboxButton,
+  ListboxOption,
+  ListboxOptions,
+  TransitionChild,
+  TransitionRoot
+} from "@headlessui/vue";
+import {
+  CheckIcon,
+  ChevronUpDownIcon,
+  MinusIcon as MinusSmIconOutline,
+  PlusSmallIcon as PlusSmIconOutline,
+} from '@heroicons/vue/20/solid'
 import Button from "../../components/Button.vue";
 import {db} from "@/firebase/firebase.js";
 import {addDoc, arrayUnion, collection, doc, updateDoc} from "firebase/firestore";

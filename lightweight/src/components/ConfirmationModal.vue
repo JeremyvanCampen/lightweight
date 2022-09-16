@@ -127,7 +127,7 @@
     TransitionChild,
     TransitionRoot,
   } from '@headlessui/vue';
-  import { ExclamationIcon } from '@heroicons/vue/outline';
+  import { ExclamationTriangleIcon as ExclamationIcon } from '@heroicons/vue/20/solid'
 
   const props = defineProps({
     open: {

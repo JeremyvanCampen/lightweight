@@ -146,8 +146,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ChevronLeftIcon,} from "@heroicons/vue/solid";
-import {PlusSmIcon as PlusSmIconOutline, PencilIcon, TrashIcon} from "@heroicons/vue/outline";
+import { ChevronLeftIcon, PlusSmallIcon as PlusSmIconOutline, PencilIcon, TrashIcon} from '@heroicons/vue/20/solid'
 import CreateLog from "@/components/Log/CreateLog.vue";
 import {getAuth} from "firebase/auth";
 import {computed, onUnmounted, ref} from "vue";

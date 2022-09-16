@@ -1,21 +1,11 @@
 <template>
-  <div class="flex min-h-full bg-bg-600 text-primary-textBody text-base font-medium">
-
+  <div class="flex min-h-full">
     <div
         class="relative flex flex-col justify-center flex-1 px-4 "
     >
-      <div
-          class="flex justify-center"
-      >
-        <img
-            alt="Logboek Genereren..."
-            class="w-32"
-            src="../assets/images/login.gif"
-        />
-      </div>
-      <div class="w-full max-w-sm mx-auto mt-12 lg:w-96  bg-bg rounded-lg p-8">
+      <div class="w-full max-w-sm mx-auto lg:w-96 dark:bg-bg-darkOffset rounded-lg p-8">
         <div>
-          <h2 class="mt-6 text-3xl text-center font-light text-primary">
+          <h2 class="mt-6 text-center">
             Lightweight
           </h2>
         </div>
@@ -33,7 +23,7 @@
                   <form action="#" class="space-y-6" @submit.prevent="submit">
                     <div>
                       <label
-                          class="block text-sm font-medium text-primary"
+                          class="block"
                           for="email"
                       >Email</label
                       >
@@ -78,7 +68,7 @@
 
                     <div>
                       <label
-                          class="block text-sm font-medium text-primary"
+                          class="block"
                           for="password"
                       >Password</label
                       >

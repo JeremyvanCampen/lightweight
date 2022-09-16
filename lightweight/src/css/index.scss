@@ -23,7 +23,7 @@
   }
 
   h2 {
-    @apply text-lg;
+    @apply text-3xl font-light text-text dark:text-text-dark;
   }
 
   h3 {
@@ -31,11 +31,18 @@
   }
 
   p {
-    @apply mt-2 mb-4 text-sm leading-normal text-gray-700;
+    @apply mt-2 mb-4 text-sm font-light text-text dark:text-text-dark;
 
     a {
       @apply underline;
     }
+  }
+  label
+  {
+    @apply  text-sm font-light text-text dark:text-text-dark;
+  }
+  button{
+    @apply font-light;
   }
 
   #tableContents {
