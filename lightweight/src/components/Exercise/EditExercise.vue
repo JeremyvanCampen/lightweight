@@ -19,7 +19,7 @@
               leave-to="opacity-0"
           >
             <DialogOverlay
-                class="fixed inset-0 transition-opacity bg-bg-600 bg-opacity-75"
+                class="fixed inset-0 transition-opacity bg-bg-darkOffset bg-opacity-60"
             />
           </TransitionChild>
 
@@ -38,7 +38,7 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div
-                class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-bg shadow-xl sm:rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:p-6 md:max-w-4xl"
+                class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden bg-bg dark:bg-bg-darkOffset text-left align-bottom transition-all transform bg-bg shadow-xl sm:rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:p-6 md:max-w-4xl"
             >
               <form
                   :class="{ 'pointer-events-none': loading }"
@@ -47,7 +47,7 @@
                   @submit.prevent="submit"
               >
                 <div class="h-full">
-                  <h2 class="text-3xl font-light text-primary truncate">
+                  <h2 class="truncate">
                     Edit {{ exercise.exerciseName }}
                   </h2>
                   <div class="space-y-6 sm:p-6">

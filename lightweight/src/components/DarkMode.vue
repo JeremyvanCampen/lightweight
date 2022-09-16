@@ -19,7 +19,7 @@
         <span
             aria-hidden="true"
             :class="[
-                                isDark ? 'bg-secondary-button' : 'bg-gray-200',
+                                isDark ? 'bg-buttonPrimary' : 'bg-gray-200',
                                 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200',
                               ]"
         />

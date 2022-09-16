@@ -3,7 +3,7 @@
     <div
         class="relative flex flex-col justify-center flex-1 px-4 "
     >
-      <div class="w-full max-w-sm mx-auto lg:w-96 dark:bg-bg-darkOffset rounded-lg p-8">
+      <div class="w-full max-w-sm mx-auto lg:w-96  rounded-lg p-8">
         <div>
           <h2 class="mt-6 text-center">
             Lightweight
@@ -34,11 +34,11 @@
                             :aria-invalid="formError"
                             :class="
                             formError
-                              ? 'text-red-900 placeholder-red-300 border-red-300 focus:ring-red-500 focus:border-red-500'
+                              ? 'text-red-900 placeholder-red-300 border-red-300 focus:ring-red-500 focus:border-red-500 focus:ring-2 focus:ring-buttonPrimary'
                               : 'placeholder-gray-400 border-gray-300 focus:ring-primary focus:border-primary'
                           "
                             aria-describedby="email-error"
-                            class="block w-full p-1 border rounded-md shadow-sm appearance-none sm:text-sm focus:outline-none text-secondary-textBody"
+                            class="block w-full p-1 border rounded-md shadow-sm appearance-none sm:text-sm focus:outline-none text-text"
                             name="email"
                             placeholder=""
                             required
@@ -136,7 +136,7 @@
                       </div>
                     </div>
                     <div>
-                      <Button :loading="loading">
+                      <Button :loading="loading" :fullWidth="true">
                         <template #text>Sign in</template>
                         <template #loading-text>Signing in...</template>
                       </Button>
@@ -191,12 +191,12 @@ function submit() {
           case 'auth/invalid-email':
           case 'auth/wrong-password':
           case 'auth/user-not-found': {
-            formError.value = 'Verkeerd e-mailadres of wachtwoord';
+            formError.value = 'Wrong email address or password';
             break;
           }
           case 'auth/user-disabled':
           case 'user-disabled': {
-            formError.value = 'Dit account is uitgeschakeld';
+            formError.value = 'This account has been disabled';
             break;
           }
         }

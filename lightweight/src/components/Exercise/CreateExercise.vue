@@ -19,7 +19,7 @@
               leave-to="opacity-0"
           >
             <DialogOverlay
-                class="fixed inset-0 transition-opacity bg-bg-600 bg-opacity-75"
+                class="fixed inset-0 transition-opacity bg-bg-darkOffset bg-opacity-60"
             />
           </TransitionChild>
 
@@ -38,7 +38,7 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div
-                class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-bg shadow-xl sm:rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:p-6 md:max-w-4xl"
+                class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-bg dark:bg-bg-darkOffset shadow-xl sm:rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:p-6 md:max-w-4xl"
             >
               <form
                   action="#"
@@ -47,7 +47,7 @@
                   :class="{ 'pointer-events-none': loading }"
               >
                 <div class="h-full">
-                  <h2 class="text-3xl font-light text-primary">
+                  <h2>
                     Create exercise
                   </h2>
                   <div class="space-y-6 sm:p-6">
@@ -70,7 +70,8 @@
                               name="description"
                               id="description"
                               v-model="formData.exerciseName"
-                              class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm"
+                              required
+                              class="block w-full border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm"
                               :class="
                               formError
                                 ? 'text-red-900 placeholder-red-300 border-red-300 focus:ring-red-500 focus:border-red-500'
@@ -109,14 +110,14 @@
                       <div class="sm:col-span-2 col-span-2 ">
                         <label
                             for="exerciseName"
-                            class="block text-sm font-light text-primary-textSub"
+                            class="block"
                         >
                           Weights
                         </label>
                         <div class="mt-1">
                           <Switch
                               v-model="weightEnabled"
-                              class="flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              class="flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-buttonPrimary-hover"
                           >
                             <span class="sr-only">Use setting</span>
                             <span
@@ -126,7 +127,7 @@
                             <span
                                 aria-hidden="true"
                                 :class="[
-                                weightEnabled ? 'bg-secondary-button' : 'bg-gray-200',
+                                weightEnabled ? 'bg-buttonPrimary' : 'bg-gray-200',
                                 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200',
                               ]"
                             />
@@ -168,7 +169,7 @@
                         <div class="mt-1">
                           <Switch
                               v-model="bwEnabled"
-                              class="flex-shrink-0 m-auto group relative rounded-full inline-flex  items-center  h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              class="flex-shrink-0 m-auto group relative rounded-full inline-flex  items-center  h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-buttonPrimary-hover"
                           >
                             <span class="sr-only">Use setting</span>
                             <span
@@ -178,7 +179,7 @@
                             <span
                                 aria-hidden="true"
                                 :class="[
-                                bwEnabled ? 'bg-secondary-button' : 'bg-gray-200',
+                                bwEnabled ? 'bg-buttonPrimary' : 'bg-gray-200',
                                 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200',
                               ]"
                             />
@@ -220,7 +221,7 @@
                         <div class="mt-1 justify-self-center">
                           <Switch
                               v-model="timeEnabled"
-                              class="flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              class="flex-shrink-0 group relative rounded-full inline-flex items-center justify-center h-5 w-10 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-buttonPrimary-hover"
                           >
                             <span class="sr-only">Use setting</span>
                             <span
@@ -230,7 +231,7 @@
                             <span
                                 aria-hidden="true"
                                 :class="[
-                                timeEnabled ? 'bg-secondary-button' : 'bg-gray-200',
+                                timeEnabled ? 'bg-buttonPrimary' : 'bg-gray-200',
                                 'pointer-events-none absolute h-4 w-9 mx-auto rounded-full transition-colors ease-in-out duration-200',
                               ]"
                             />

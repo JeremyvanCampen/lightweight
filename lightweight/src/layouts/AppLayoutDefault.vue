@@ -73,8 +73,8 @@
                       :href="href"
                       :class="[
                         isActive
-                       ? 'bg-buttonPrimary text-text-dark dark:bg-bg-dark dark:text-text-dark'
-                      : 'text-text dark:text-text-dark hover:bg-bg-dark',
+                        ? 'bg-buttonPrimary text-text-dark dark:bg-buttonPrimary dark:text-text-dark'
+                      : 'text-text dark:text-text-dark hover:bg-buttonPrimary-hover hover:text-text-dark',
                         'group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md',
                       ]"
                       @click="navigate"
@@ -172,8 +172,8 @@
                   :href="href"
                   :class="[
                    isActive
-                        ? 'bg-buttonPrimary text-text-dark dark:bg-bg-dark dark:text-text-dark'
-                      : 'text-text dark:text-text-dark hover:bg-bg-dark',
+                    ? 'bg-buttonPrimary text-text-dark dark:bg-buttonPrimary dark:text-text-dark'
+                      : 'text-text dark:text-text-dark hover:bg-buttonPrimary-hover hover:text-text-dark',
                         'group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md',
                       ]"
                   @click="navigate"
@@ -292,7 +292,7 @@
                     />
                     <div
                       v-else
-                      class="flex items-center justify-center w-8 h-8 text-text font-bold uppercase bg-buttonSecondary  dark:bg-buttonPrimary-dark rounded-full"
+                      class="flex items-center justify-center w-8 h-8 text-text-dark font-bold uppercase bg-buttonPrimary rounded-full"
                     >
                       {{ user.email.substring(0, 1) }}
                     </div>
@@ -317,7 +317,7 @@
                   leave-to-class="transform opacity-0 scale-95"
                 >
                   <MenuItems
-                    class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-buttonSecondary dark:bg-buttonPrimary-dark rounded-md shadow-lg ring-1 ring-black ring-opacity-5"
+                    class="absolute right-0 w-48 py-1 mt-2 origin-top-right bg-buttonPrimary rounded-md shadow-lg ring-1 ring-black ring-opacity-5"
                   >
                     <MenuItem v-slot="{ active }">
                       <a
@@ -325,7 +325,7 @@
                         @click="logOut"
                         :class="[
                           active ? '' : '',
-                          'block px-4 py-2 text-sm text-secondary-textBody font-medium',
+                          'block px-4 py-2 text-sm text-text-dark font-medium',
                         ]"
                         >Sign out</a
                       >
@@ -369,7 +369,7 @@ import {
   DisclosurePanel,
 } from "@headlessui/vue";
 
-import { HomeIcon, XCircleIcon as XIcon, Bars2Icon as MenuAlt2Icon,MagnifyingGlassIcon as SearchIcon, ChevronDownIcon } from '@heroicons/vue/24/outline'
+import { HomeIcon, ScaleIcon, XCircleIcon as XIcon, Bars2Icon as MenuAlt2Icon,MagnifyingGlassIcon as SearchIcon, ChevronDownIcon } from '@heroicons/vue/24/outline'
 import { getAuth, signOut } from "firebase/auth";
 import { onMounted, onBeforeUnmount, ref } from "vue";
 import { useUiStateComposable } from "@/composables/uistate-composable";
@@ -379,7 +379,7 @@ import DarkMode from "@/components/DarkMode";
 const { globalState } = useUiStateComposable();
 const sidebarOpen = ref(false);
 const navigation = ref([
-  { name: "Exercises", href: "/exercises", icon: HomeIcon },
+  { name: "Exercises", href: "/exercises", icon: ScaleIcon },
 ]);
 const user = ref();
 const loggedIn = ref(false);

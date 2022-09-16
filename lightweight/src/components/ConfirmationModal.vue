@@ -2,7 +2,7 @@
   <TransitionRoot as="template" :show="open">
     <Dialog
       as="div"
-      class="fixed inset-0 z-30 overflow-y-auto  bg-black"
+      class="fixed inset-0 z-30 overflow-y-auto bg-bg dark:bg-bg-darkOffset"
       @close="!loading && cancel()"
     >
       <div class="flex justify-center min-h-screen text-center sm:block">
@@ -16,7 +16,7 @@
           leave-to="opacity-0"
         >
           <DialogOverlay
-            class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
+            class="fixed inset-0 transition-opacity bg-bg dark:bg-bg-darkOffset dark:bg-opacity-60"
           />
         </TransitionChild>
 
@@ -35,7 +35,7 @@
           leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
         >
           <div
-            class="relative bg-bg-600 inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform shadow-xl sm:rounded-lg   sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform shadow-xl sm:rounded-lg   sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
             <div class="sm:flex sm:items-start ">
               <div
                 class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full sm:mx-0 sm:h-10 sm:w-10 bg-red-100"
@@ -91,7 +91,7 @@
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  <div>verwerken...</div>
+                  <div>Processing...</div>
                 </div>
                 <div v-else>
                   {{ confirmButtonText }}

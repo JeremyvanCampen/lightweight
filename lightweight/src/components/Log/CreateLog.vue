@@ -19,7 +19,7 @@
               leave-to="opacity-0"
           >
             <DialogOverlay
-                class="fixed inset-0 transition-opacity bg-bg-600 bg-opacity-75"
+                class="fixed inset-0 transition-opacity bg-bg-darkOffset bg-opacity-60"
             />
           </TransitionChild>
 
@@ -38,7 +38,7 @@
               leave-to="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
             <div
-                class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-bg shadow-xl sm:rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:p-6 md:max-w-4xl"
+                class="relative inline-block w-full px-4 pt-5 pb-4 overflow-hidden text-left align-bottom transition-all transform bg-bg dark:bg-bg-darkOffset shadow-xl sm:rounded-lg sm:my-8 sm:align-middle sm:max-w-sm sm:p-6 md:max-w-4xl"
             >
               <form
                   action="#"
@@ -47,7 +47,7 @@
                   :class="{ 'pointer-events-none': loading }"
               >
                 <div class="h-full">
-                  <h2 class="text-3xl font-light text-primary">Create log</h2>
+                  <h2>Create log</h2>
                   <label
                       class="text-right text-sm font-light text-primary-textTitle pr-4"
                   >
@@ -137,8 +137,8 @@
                         <Listbox as="div" v-model="set.reps">
                           <div class="relative">
                             <ListboxButton
-                                class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-white focus:outline-none focus:ring-1 focus:ring-white sm:text-sm">
-                              <span class="block truncate">{{ set.reps }}</span>
+                                class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-white sm:text-sm">
+                              <span class="block truncate text-text">{{ set.reps }}</span>
                               <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                                 <ChevronUpDownIcon class="h-5 w-5 text-black" aria-hidden="true"/>
                               </span>
@@ -149,7 +149,7 @@
                                   class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                                 <ListboxOption as="template" v-for="amount in 200" :key="amount" :value="amount"
                                                v-slot="{ active, selected }">
-                                  <li :class="[active ? 'text-white bg-primary-button' : 'text-black-900', 'relative cursor-default select-none py-2 pl-3 pr-9']">
+                                  <li :class="[active ? 'text-text-dark bg-buttonPrimary' : 'text-text', 'relative cursor-default select-none py-2 pl-3 pr-9']">
                                     <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{
                                         amount
                                       }}
@@ -182,6 +182,7 @@
                             aria-describedby="description-error"
                         />
                       </div>
+
                     </div>
                   </div>
                   <div v-else class="space-y-6 sm:p-6">
@@ -296,6 +297,12 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-span-12">
+                  <label for="comment"  class="block text-sm font-light text-primary-textSub">Remark</label>
+                  <div class="mt-1">
+                    <textarea placeholder="Optional" rows="2" v-model="formData.remark" class="block w-full border-gray-300 rounded-md text-text shadow-sm focus:ring-primary focus:border-primary sm:text-sm" />
+                  </div>
+                </div>
                 <div v-if="!exercise.isTime" class="space-y-6 sm:p-6 py-4">
                   <!-- Functionaliteit voor het toevoegen van een nieuw component -->
                   <!-- componenten headers -->
@@ -317,22 +324,36 @@
 
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-4">
-
-                      <select
-                          class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-primary focus:border-primary sm:text-sm disabled:cursor-not-allowed disabled:bg-gray-200"
-                          v-model="formData.setToAdd.reps"
-                      >
-                        <option value="" disabled hidden>
-                          Select an amount
-                        </option>
-                        <option
-                            v-for="amount in 100"
-                            :key="amount"
-                            :value="amount"
-                        >
-                          {{ amount }}
-                        </option>
-                      </select>
+                      <Listbox as="div" v-model="formData.setToAdd.reps">
+                        <div class="relative">
+                          <ListboxButton
+                              class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm  focus:outline-none focus:ring-1 focus:ring-white sm:text-sm">
+                            <span class="block truncate text-text">{{ formData.setToAdd.reps }}</span>
+                            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                <ChevronUpDownIcon class="h-5 w-5 text-black" aria-hidden="true"/>
+                              </span>
+                          </ListboxButton>
+                          <transition leave-active-class="transition ease-in duration-100"
+                                      leave-from-class="opacity-100" leave-to-class="opacity-0">
+                            <ListboxOptions
+                                class="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                              <ListboxOption as="template" v-for="amount in 200" :key="amount" :value="amount"
+                                             v-slot="{ active, selected }">
+                                <li :class="[active ? 'text-text-dark bg-buttonPrimary' : 'text-text', 'relative cursor-default select-none py-2 pl-3 pr-9']">
+                                    <span :class="[selected ? 'font-semibold' : 'font-normal', 'block truncate']">{{
+                                        amount
+                                      }}
+                                    </span>
+                                  <span v-if="selected"
+                                        :class="[active ? 'text-white' : 'text-black', 'absolute inset-y-0 right-0 flex items-center pr-4']">
+                                          <CheckIcon class="h-5 w-5" aria-hidden="true"/>
+                                    </span>
+                                </li>
+                              </ListboxOption>
+                            </ListboxOptions>
+                          </transition>
+                        </div>
+                      </Listbox>
                     </div>
                     <div class="col-span-5">
                       <input
@@ -504,8 +525,9 @@ const emit = defineEmits(["closeCreateLogModal"]);
 
 const formData = ref({
   sets: [],
+  remark: '',
   setToAdd: {
-    reps: "",
+    reps: "1",
     weight: "",
     time: ""
   },
@@ -527,7 +549,6 @@ async function submit() {
 
 async function saveExercise() {
   const logsCollection = collection(db, "exercises", props.exerciseID, "logs");
-  const recordsCollection = collection(db, "exercises", props.exerciseID, "records");
 
   if (props.exercise.isWeight) {
     var oneRM = 0;
@@ -556,6 +577,7 @@ async function saveExercise() {
   }
   addDoc(logsCollection, {
     sets: formData.value.sets,
+    remark: formData.value.remark,
     createdByName: user.value.email,
     createdByUid: user.value.uid,
     createdDate: moment().format("DD-MM-YYYY HH:mm"),
@@ -716,9 +738,11 @@ function removeAddedSet(index) {
 function closeCreateLogModal() {
   formData.value = {
     sets: [],
+    remark: '',
     setToAdd: {
-      reps: "",
-      weight: "",
+      reps: '1',
+      weight: '',
+      time: ''
     },
   };
   formError.value = "";
@@ -730,7 +754,7 @@ function closeCreateLogModal() {
 <style>
 .c-toast {
   margin-top: 6em !important;
-  background-color: #03dac6 !important;
-  color: #000000 !important;
+  background-color: #E31C25 !important;
+  color: #FFFFFF !important;
 }
 </style>

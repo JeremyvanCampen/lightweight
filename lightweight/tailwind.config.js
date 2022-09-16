@@ -4,7 +4,7 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                body: ["Roboto"],
+                body: ["Open Sans"],
             },
             colors: {
                 bg:
@@ -28,15 +28,15 @@ module.exports = {
                 },
                 buttonPrimary:
                     {
-                        DEFAULT: "#cf0015",
-                        hover: "#67000a",
+                        DEFAULT: "#E31C25",
+                        hover: "#BB000E",
                         dark: "#03dac6",
                         darkHover: "#02ae9e"
                     },
                 buttonSecondary:
                     {
-                        DEFAULT: "#cf0015",
-                        hover: "#67000a",
+                        DEFAULT: "#E31C25",
+                        hover: "#BB000E",
                         dark: "#BB86FC",
                         darkHover: "#BB86FC"
                     },

@@ -2,7 +2,7 @@
   <div class="flex flex-col flex-1 w-full mx-auto bg-bg-600">
     <div class="flex flex-row">
       <div
-          class="ml-8 mr-4 my-8 bg-bg rounded-lg shadow w-min p-3"
+          class="ml-8 mr-4 my-8 bg-buttonPrimary text-text-dark rounded-lg shadow w-min p-3"
           @click="$router.go(-1)"
       >
         <ChevronLeftIcon aria-hidden="true" class="w-6 h-6 sm:w-8 sm:h-8"/>
@@ -10,7 +10,7 @@
 
       <h2
           v-if="exercise"
-          class="my-8 self-center text-3xl font-light text-primary truncate"
+          class="my-8 self-center truncate"
       >
         {{ exercise.exerciseName }}
       </h2>
@@ -61,49 +61,49 @@
           v-for="(log, index) in filteredAndSorted"
           :key="log.id"
           :style="{ transitionDelay: 0.02 * index + 's' }"
-          class="bg-bg rounded-lg cursor-pointer  flex flex-1 flex-col justify-between"
+          class="bg-bg-darkOffset dark:bg-bg-darkOffset  rounded-lg cursor-pointer  flex flex-1 flex-col justify-between"
       >
         <div class="flex">
           <span
-              class="relative flex-1 text-left text-xl font-bold text-secondary-button pl-4 pt-2"
+              class="relative flex-1 text-left sm:text-2xl xl:text-3xl 2xl:text-4xl text-xl text-text-darkSub font-medium pl-4 pt-2"
           >
             {{ log.sets.length }} set(s)
           </span>
         </div>
         <div class="flex flex-1 flex-col justify-between">
-          <div class="flex flex-col mt-4 mb-4">
+          <div class="flex flex-col mt-4 mb-4 text-text-darkSub dark:text-text-darkTitle">
             <div
                 v-for="(set, index) in log.sets"
                 :key="index"
                 class="grid grid-cols-2 gap-4"
             >
               <div v-if="!exercise.isTime" class="col-span-1 self-center text-right">
-                <span class="truncate">{{ set.reps }}</span>
-                <span class="truncate text-xs font-light"> reps</span>
+                <span class="truncate text-text-darkSub font-bold">{{ set.reps }}</span>
+                <span class="truncate text-xs text-buttonSecondary"> reps</span>
               </div>
               <div v-if="exercise.isBodyWeight" class="col-span-1 self-center truncate text-left">
-                <span v-if="set.weight > 0" class="truncate">+ {{ set.weight }}</span>
-                <span v-if="set.weight > 0" class="truncate text-xs font-light"> KG</span>
-                <span v-else class="truncate text-xs font-light"> BW</span>
+                <span v-if="set.weight > 0" class="truncate text-text-darkSub  font-bold">+ {{ set.weight }}</span>
+                <span v-if="set.weight > 0" class="truncate text-xs text-buttonSecondary"> KG</span>
+                <span v-else class="truncate text-xs text-buttonSecondary"> BW</span>
               </div>
               <div v-if="exercise.isTime" class="col-span-1 self-center text-right truncate">
-                <span v-if="set.time > 0" class="truncate">{{ set.time }}</span>
-                <span v-if="set.time > 0" class="truncate text-xs font-light"> sec</span>
-                <span v-else class="truncate text-xs font-light"> seconds</span>
+                <span v-if="set.time > 0" class="truncate text-text-darkSub  font-bold">{{ set.time }}</span>
+                <span v-if="set.time > 0" class="truncate text-xs text-buttonSecondary"> sec</span>
+                <span v-else class="truncate text-xs text-buttonSecondary"> seconds</span>
               </div>
               <div v-if="exercise.isTime" class="col-span-1 self-center text-left">
-                <span v-if="set.weight > 0" class="truncate">{{ set.weight }}</span>
-                <span v-if="set.weight > 0" class="truncate text-xs font-light"> KG</span>
+                <span v-if="set.weight > 0" class="truncate text-text-darkSub font-bold">{{ set.weight }}</span>
+                <span v-if="set.weight > 0" class="truncate text-xs text-buttonSecondary"> KG</span>
               </div>
               <div v-if="!exercise.isBodyWeight && !exercise.isTime" class="col-span-1 self-center text-left">
-                <span class="truncate">{{ set.weight }}</span>
-                <span class="truncate text-xs font-light"> KG</span>
+                <span class="truncate text-text-darkSub  font-bold">{{ set.weight }}</span>
+                <span class="truncate text-xs text-buttonSecondary"> KG</span>
               </div>
             </div>
           </div>
         </div>
         <label
-            class="text-right text-sm font-light text-primary-textTitle pr-4 pb-2"
+            class="text-right text-sm font-light text-text-darkSub dark:text-text-darkTitle pr-4 pb-2"
         >
           {{ log.createdDate }}
         </label>
@@ -112,7 +112,7 @@
 
     <div class="fixed bottom-10 right-10">
       <button
-          class="p-6 border border-transparent rounded-full shadow-sm text-secondary-textBody bg-buttonPrimary hover:bg-buttonPrimary-hover"
+          class="p-6 border border-transparent rounded-full shadow-sm text-text-dark bg-buttonPrimary hover:bg-buttonPrimary-hover"
           type="button"
           v-on:click="openCreateLogModal()"
       >
@@ -146,7 +146,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ChevronLeftIcon, PlusSmallIcon as PlusSmIconOutline, PencilIcon, TrashIcon} from '@heroicons/vue/20/solid'
+import { ChevronLeftIcon, PlusSmallIcon as PlusSmIconOutline, PencilIcon, TrashIcon} from '@heroicons/vue/24/outline'
 import CreateLog from "@/components/Log/CreateLog.vue";
 import {getAuth} from "firebase/auth";
 import {computed, onUnmounted, ref} from "vue";
@@ -162,7 +162,7 @@ const {globalState} = useUiStateComposable();
 const confirmModalData = ref({
   open: false,
   title: 'Delete exercise',
-  body: 'Are you sure you want to delete this project? All data from this project and the underlying data will be permanently deleted from our servers. This action cannot be undone.',
+  body: 'Are you sure you want to delete this exercise? All data from this exercise and the underlying data will be permanently deleted from our servers. This action cannot be undone.',
   cancelButtonText: 'Cancel',
   confirmButtonText: 'Confirm',
   loading: false,
