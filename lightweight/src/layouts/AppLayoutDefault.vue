@@ -336,7 +336,7 @@
             </div>
           </div>
         </div>
-        <div class="flex flex-col h-fit bg-bg-600">
+        <div class="flex flex-col h-fit bg-bg dark:bg-bg-dark">
           <Transition
             enter-from-class="opacity-0"
             enter-active-class="transition-opacity duration-300 ease-in-out"
