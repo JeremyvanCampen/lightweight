@@ -28,12 +28,12 @@ export default function TabOneScreen() {
   return (
     <SafeAreaView className="flex-1 items-center justify-center bg-dark-main px-20">
       <View className="w-full gap-y-8">
-        <View className=" bg-white flex-row items-center gap-x-2 rounded-xl p-1">
+        <View className=" bg-white flex-row items-center gap-x-2 rounded-xl p-1 pr-2">
           <Ionicons name="mail-outline" size={18} />
           <TextInput
             value={email}
             onChangeText={(email) => setEmail(email)}
-            className="bg-transparent"
+            className="bg-transparent flex-1"
             textContentType="emailAddress"
             keyboardType="email-address"
             placeholder="Enter Email"
