@@ -1,4 +1,3 @@
-import EditScreenInfo from "@/components/EditScreenInfo";
 import { Text, View, TextInput, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import {
@@ -11,15 +10,20 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { auth, app } from "../../firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useAuth } from '../../context/authProvider';
 
-export default function TabOneScreen() {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setUser } = useAuth();
+
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((result) => {
-        console.log(result);
+        setUser({name: 'John Doe'})
+    
+        // console.log(result);
       })
       .catch((error) => {
         console.log("Something went wrong:" + error.message);
