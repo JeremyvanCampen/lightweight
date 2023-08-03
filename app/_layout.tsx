@@ -34,8 +34,8 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       setTimeout(() => {
-      SplashScreen.hideAsync();
-    }, 1500);
+        SplashScreen.hideAsync();
+      }, 1500);
     }
   }, [loaded]);
 
@@ -49,8 +49,8 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <AuthProvider>
-      <ThemeProvider value={DarkTheme}>
+    <ThemeProvider value={DarkTheme}>
+      <AuthProvider>
         <StatusBar style="light" />
         <Stack>
           <Stack.Screen
@@ -66,7 +66,7 @@ function RootLayoutNav() {
             }}
           />
         </Stack>
-      </ThemeProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

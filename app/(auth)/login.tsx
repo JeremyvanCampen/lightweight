@@ -17,6 +17,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const { setUser } = useAuth();
 
+  console.log(auth.currentUser?.displayName)
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)

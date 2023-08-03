@@ -1,9 +1,16 @@
 import { initializeApp } from "firebase/app";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getAuth } from "firebase/auth";
+import {
+  API_KEY,
+  APP_ID,
+  AUTH_DOMAIN,
+  MESSAGING_SENDER_ID,
+  PROJECT_ID,
+  STORAGE_BUCKET,
+} from "@env";
 
 // Optionally import the services that you want to use
-import { initializeAuth } from "firebase/auth";
-import { getReactNativePersistence } from "firebase/auth/react-native";
+
 // import {...} from "firebase/database";
 // import {...} from "firebase/firestore";
 // import {...} from "firebase/functions";
@@ -11,13 +18,13 @@ import { getReactNativePersistence } from "firebase/auth/react-native";
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_CONFIG_APIKEY,
-  authDomain: process.env.EXPO_PUBLIC_FIREBASE_CONFIG_AUTHDOMAIN,
-  projectId: process.env.EXPO_PUBLIC_FIREBASE_CONFIG_PROJECTID,
-  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_CONFIG_STORAGEBUCKET,
-  messagingSenderId: process.env.FIREBASE_CONFIG_MESSAGINGSENDERID,
-  appId: process.env.EXPO_PUBLIC_FIREBASE_CONFIG_APPID,
+  apiKey: API_KEY,
+  authDomain: AUTH_DOMAIN,
+  projectId: PROJECT_ID,
+  storageBucket: STORAGE_BUCKET,
+  messagingSenderId: MESSAGING_SENDER_ID,
+  appId: APP_ID,
 };
 
 export const app = initializeApp(firebaseConfig);
-export const auth = initializeAuth(app);
+export const auth = getAuth(app);
