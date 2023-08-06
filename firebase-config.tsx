@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   API_KEY,
   APP_ID,
@@ -8,6 +8,7 @@ import {
   PROJECT_ID,
   STORAGE_BUCKET,
 } from "@env";
+import { useAuth } from '@/context/authProvider';
 
 // Optionally import the services that you want to use
 
@@ -28,3 +29,4 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+

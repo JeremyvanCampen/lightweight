@@ -1,16 +1,13 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
+import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { SplashScreen, Stack, Slot } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme, View } from "react-native";
+import { useColorScheme } from "react-native";
 import "../global.css";
 import { StatusBar } from "expo-status-bar";
-import { AuthProvider } from "../context/authProvider";
+import { Provider, useAuth } from "@/context/authProvider";
+import React from "react";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -42,31 +39,29 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
-  return <RootLayoutNav />;
+  return (
+    <Provider>
+      <RootLayoutNav />
+    </Provider>
+  );
 }
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const { authInitialized, user } = useAuth();
 
+  if (!authInitialized && !user) return null;
   return (
     <ThemeProvider value={DarkTheme}>
-      <AuthProvider>
-        <StatusBar style="light" />
-        <Stack>
-          <Stack.Screen
-            name="(auth)"
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="(tabs)"
-            options={{
-              headerShown: false,
-            }}
-          />
-        </Stack>
-      </AuthProvider>
+      <StatusBar style="light" />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen
+          name="(tabs)"
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Stack>
     </ThemeProvider>
   );
 }

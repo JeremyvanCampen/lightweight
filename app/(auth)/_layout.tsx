@@ -11,6 +11,15 @@ export default function TabsLayout() {
         }}
         name="login"
       />
+      <Stack.Screen
+        name="modal"
+        options={{
+          // Set the presentation mode to modal for our modal route.
+          presentation: "modal",
+          animation: "slide_from_bottom",
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
